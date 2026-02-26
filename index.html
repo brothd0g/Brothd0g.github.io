@@ -2,51 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Retro TV Desktop ARG</title>
+<title>Retro Desktop ARG</title>
 <style>
 body {
   margin: 0;
-  background: #000;
   font-family: "Tahoma", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* TV Container */
-#tvContainer {
-  position: relative;
-  width: 900px;
-  height: 700px;
-}
-
-/* TV Screen */
-#tvScreen {
-  position: absolute;
-  top: 60px;
-  left: 60px;
-  width: 780px;
-  height: 580px;
   overflow: hidden;
-  background: url('bliss.jpg') no-repeat center center;
+  background: url('bliss.jpg') no-repeat center center fixed;
   background-size: cover;
-}
-
-/* TV Frame */
-#tvFrame {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 10000;
-  pointer-events: none;
 }
 
 /* Scanlines */
 .scanlines {
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -114,29 +82,29 @@ body {
 
 /* Taskbar */
 .taskbar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
-  height: 35px;
+  height: 40px;
   background: #c0c0c0;
   border-top: 2px solid #000;
   display: flex;
   align-items: center;
-  z-index: 500;
+  z-index: 1000;
 }
 .start {
   background: #c0c0c0;
   border: 2px solid black;
-  margin: 2px;
-  padding: 3px 8px;
+  margin: 5px;
+  padding: 5px 10px;
   font-weight: bold;
   cursor: pointer;
-  z-index: 501;
+  z-index: 1001;
 }
 .clock {
   margin-left: auto;
-  margin-right: 5px;
-  font-size: 12px;
+  margin-right: 10px;
+  font-size: 14px;
 }
 
 /* Wired Window */
@@ -188,7 +156,7 @@ body {
 
 /* Secret Page */
 #secretPage {
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   background: black;
@@ -205,7 +173,7 @@ body {
 
 /* Shutdown Screen */
 #shutdownScreen {
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.95);
@@ -234,51 +202,227 @@ body {
 </head>
 <body>
 
-<div id="tvContainer">
-  <div id="tvScreen">
-
-    <div class="scanlines"></div>
-
-    <!-- Desktop Icons -->
-    <div class="desktop">
-      <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
-        <img src="computer.png"><div>My Computer</div>
-      </div>
-      <div class="icon" onclick="openWindow('docsWindow')">
-        <img src="folder.png"><div>My Documents</div>
-      </div>
-      <div class="icon" id="iconWired" onclick="openWindow('wiredWindow')">
-        <img src="wired.png"><div>The Wired</div>
-      </div>
-      <div class="icon" onclick="openWindow('musicWindow')">
-        <img src="music.png"><div>Music Player</div>
-      </div>
-      <div class="icon" id="iconShed" onclick="openWindow('shedAlbum')">
-        <img src="shed_icon.png"><div>Shed Album</div>
-      </div>
-    </div>
-
-    <!-- Windows (example: popup, docsWindow, wiredWindow, musicWindow, shedAlbum, secretARG, secretPage, shutdownScreen) -->
-    <!-- Copy previous merged HTML for all windows here inside #tvScreen -->
-
-    <div class="taskbar">
-      <div class="start" onclick="shutdown()">Shut Down</div>
-      <div class="clock" id="clock"></div>
-    </div>
-
+<!-- Desktop -->
+<div class="desktop">
+  <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
+    <img src="computer.png"><div>My Computer</div>
   </div>
-
-  <img id="tvFrame" src="tv_frame.png">
-
+  <div class="icon" onclick="openWindow('docsWindow')">
+    <img src="folder.png"><div>My Documents</div>
+  </div>
+  <div class="icon" id="iconWired" onclick="openWindow('wiredWindow')">
+    <img src="wired.png"><div>The Wired</div>
+  </div>
+  <div class="icon" onclick="openWindow('musicWindow')">
+    <img src="music.png"><div>Music Player</div>
+  </div>
+  <div class="icon" id="iconShed" onclick="openWindow('shedAlbum')">
+    <img src="shed_icon.png"><div>Shed Album</div>
+  </div>
 </div>
+
+<!-- Windows -->
+<div class="window" id="popup">
+  <div class="titlebar">
+    System
+    <div>
+      <button onclick="minimize('popup')">_</button>
+      <button onclick="closeWindow('popup')">X</button>
+    </div>
+  </div>
+  <div class="content">
+    <p>Welcome to my digital room.</p>
+    <p>Status: online</p>
+  </div>
+</div>
+
+<div class="window" id="docsWindow">
+  <div class="titlebar">
+    My Documents
+    <div>
+      <button onclick="minimize('docsWindow')">_</button>
+      <button onclick="closeWindow('docsWindow')">X</button>
+    </div>
+  </div>
+  <div class="content">
+    <p>Nothing to see here... yet.</p>
+    <p id="hiddenFile" onclick="openWindow('secretARG')">clue.txt</p>
+  </div>
+</div>
+
+<div class="window" id="wiredWindow">
+  <div class="titlebar">
+    wired_connection.exe
+    <div>
+      <button onclick="minimize('wiredWindow')">_</button>
+      <button onclick="closeWindow('wiredWindow')">X</button>
+    </div>
+  </div>
+  <div class="content">
+    <p id="glitch">connection unstable...</p>
+    <p>you are already here.</p>
+    <p style="opacity:0.6;">there is no outside.</p>
+    <br>
+    <button onclick="closeWindow('wiredWindow')">disconnect</button>
+  </div>
+</div>
+
+<div class="window" id="musicWindow">
+  <div class="titlebar">
+    Music Player
+    <div>
+      <button onclick="minimize('musicWindow')">_</button>
+      <button onclick="closeWindow('musicWindow')">X</button>
+    </div>
+  </div>
+  <div class="content" style="display:flex; flex-direction:column; align-items:center;">
+    <p id="currentTrack" style="font-weight:bold; margin-bottom:10px;">Track: None</p>
+    <audio id="audioPlayer" controls style="width:90%;"></audio>
+    <div style="margin-top:10px;">
+      <button onclick="prevTrack()">⏮️</button>
+      <button onclick="playPause()">▶️/⏸️</button>
+      <button onclick="nextTrack()">⏭️</button>
+    </div>
+  </div>
+</div>
+
+<div class="window" id="shedAlbum">
+  <div class="titlebar">
+    Shed - Title Fight
+    <div>
+      <button onclick="minimize('shedAlbum')">_</button>
+      <button onclick="closeWindow('shedAlbum')">X</button>
+    </div>
+  </div>
+  <div class="content">
+    <img src="shed_cover.jpg" alt="Shed Album Cover">
+    <ul id="shedTracklist">
+      <li>Coxton Yard</li>
+      <li>Shed</li>
+      <li>Flood of '72</li>
+      <li>Society</li>
+      <li>You Can't Say Kingston Doesn't Love You</li>
+      <li>Crescent-Shaped Depression</li>
+      <li>Safe in Your Skin</li>
+      <li>Where Am I?</li>
+      <li>Your Screen Door</li>
+      <li>27</li>
+      <li>Stab</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Secret Page -->
+<div id="secretPage">
+  <p>You're not supposed to be here yet.</p>
+</div>
+
+<div class="window" id="secretARG">
+  <div class="titlebar">
+    clue.txt
+    <div>
+      <button onclick="minimize('secretARG')">_</button>
+      <button onclick="closeWindow('secretARG')">X</button>
+    </div>
+  </div>
+  <div class="content" style="color:#0f0;">
+    <p>Maybe the music holds the answer...</p>
+  </div>
+</div>
+
+<!-- Shutdown -->
+<div id="shutdownScreen">
+  <p>It is now safe to turn off your computer.</p>
+  <button id="powerOn" onclick="powerOn()">POWER ON</button>
+</div>
+
+<!-- Taskbar -->
+<div class="taskbar">
+  <div class="start" onclick="shutdown()">Shut Down</div>
+  <div class="clock" id="clock"></div>
+</div>
+
+<div class="scanlines"></div>
 
 <audio id="startupSound" src="startup.wav"></audio>
 <audio id="shedPlayer"></audio>
-<audio id="audioPlayer" controls style="display:none;"></audio>
 
 <script>
-// JS: boot, windows, music player, shed album, ARG secret page, Wired popup, shutdown/startup, clock
-// Use all the JS from your previous merged version, no changes needed except ensure elements live inside #tvScreen
+let zIndexCounter = 1;
+
+// Boot
+window.addEventListener('load', () => {
+  const boot = document.createElement('div');
+  boot.style.position='fixed';
+  boot.style.width='100%';
+  boot.style.height='100%';
+  boot.style.background='#008080';
+  boot.style.color='white';
+  boot.style.display='flex';
+  boot.style.alignItems='center';
+  boot.style.justifyContent='center';
+  boot.style.fontSize='24px';
+  boot.innerText = 'Starting Windows 98...';
+  document.body.appendChild(boot);
+  document.getElementById('startupSound').play();
+  setTimeout(()=>{document.body.removeChild(boot)},4000);
+});
+
+// Windows open/close/minimize
+function openWindow(id){const win=document.getElementById(id);win.style.display="block";win.style.zIndex=zIndexCounter++;}
+function minimize(id){document.getElementById(id).style.display="none";}
+function closeWindow(id){document.getElementById(id).style.display="none";}
+
+// Shutdown / Power On
+function shutdown(){document.getElementById('shutdownScreen').style.display='flex';}
+function powerOn(){location.reload();}
+
+// Clock
+function updateClock(){const now=new Date();document.getElementById("clock").innerText=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');}
+setInterval(updateClock,1000);
+updateClock();
+
+// Wired glitch
+setInterval(()=>{const text=document.getElementById("glitch");if(text) text.style.opacity=Math.random();},150);
+
+// Draggable windows
+let dragTarget=null,offsetX=0,offsetY=0;
+document.addEventListener('mousedown', e=>{if(e.target.closest('.titlebar')){dragTarget=e.target.closest('.window');offsetX=e.clientX-dragTarget.offsetLeft;offsetY=e.clientY-dragTarget.offsetTop;dragTarget.style.zIndex=zIndexCounter++;}});
+document.addEventListener('mousemove', e=>{if(dragTarget){dragTarget.style.left=(e.clientX-offsetX)+'px';dragTarget.style.top=(e.clientY-offsetY)+'px';}});
+document.addEventListener('mouseup', ()=>{dragTarget=null;});
+
+// Music Player
+const playlist=[{name:"Song One",src:"song1.mp3"},{name:"Song Two",src:"song2.mp3"},{name:"Song Three",src:"song3.mp3"}];
+let currentTrackIndex=0;
+const audio=document.getElementById("audioPlayer");
+const trackLabel=document.getElementById("currentTrack");
+function loadTrack(index){if(index<0)index=playlist.length-1;if(index>=playlist.length)index=0;currentTrackIndex=index;audio.src=playlist[currentTrackIndex].src;trackLabel.innerText="Track: "+playlist[currentTrackIndex].name;audio.play();}
+function nextTrack(){loadTrack(currentTrackIndex+1);}
+function prevTrack(){loadTrack(currentTrackIndex-1);}
+function playPause(){if(audio.paused)audio.play();else audio.pause();}
+audio.addEventListener('ended', nextTrack);
+loadTrack(0);
+
+// Shed Album
+const shedTracks=["shed01.mp3","shed02.mp3","shed03.mp3","shed04.mp3","shed05.mp3","shed06.mp3","shed07.mp3","shed08.mp3","shed09.mp3","shed10.mp3","shed11.mp3"];
+const shedTrackNames=["Coxton Yard","Shed","Flood of '72","Society","You Can't Say Kingston Doesn't Love You","Crescent-Shaped Depression","Safe in Your Skin","Where Am I?","Your Screen Door","27","Stab"];
+const shedAudio=document.getElementById("shedPlayer");
+let currentShedTrack=-1;
+window.addEventListener('DOMContentLoaded',()=>{
+  const shedTrackElems=document.querySelectorAll("#shedTracklist li");
+  shedTrackElems.forEach((li,index)=>{li.addEventListener('click',()=>playShedTrack(index));});
+});
+function playShedTrack(index){shedAudio.src=shedTracks[index];shedAudio.play();updateShedHighlight(index);}
+function updateShedHighlight(index){const shedTrackElems=document.querySelectorAll("#shedTracklist li");shedTrackElems.forEach((li,i)=>{li.innerText=shedTrackNames[i];if(i===index)li.classList.add("current");else li.classList.remove("current");});currentShedTrack=index;}
+shedAudio.addEventListener('ended',()=>{let next=(currentShedTrack+1)%shedTracks.length;playShedTrack(next);});
+setInterval(()=>{const albumWin=document.getElementById("shedAlbum");albumWin.style.opacity=albumWin.style.opacity==="0.95"?"1":"0.95";},150);
+
+// Secret ARG
+const secretSequence=["iconShed","iconMyComputer"];
+let clickSequence=[];
+function registerClick(id){clickSequence.push(id);if(clickSequence.length>secretSequence.length){clickSequence.shift();}
+if(JSON.stringify(clickSequence)===JSON.stringify(secretSequence)){document.getElementById("secretPage").style.display="flex";}}
+["iconShed","iconMyComputer"].forEach(id=>{const icon=document.getElementById(id);const oldOnClick=icon.onclick;icon.onclick=()=>{registerClick(id);oldOnClick();};});
 
 </script>
 
