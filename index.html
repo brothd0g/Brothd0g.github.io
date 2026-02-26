@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>ash_desktop</title>
-
     <style>
         body {
             margin: 0;
@@ -11,6 +10,22 @@
             overflow: hidden;
         }
 
+        /* CRT Scanlines */
+        .scanlines {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.03) 0px,
+                rgba(0,0,0,0.03) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+        }
+
+        /* Desktop Icons */
         .desktop {
             display: flex;
             flex-direction: column;
@@ -31,6 +46,7 @@
             image-rendering: pixelated;
         }
 
+        /* Windows */
         .window {
             position: absolute;
             top: 120px;
@@ -39,6 +55,7 @@
             background: #c0c0c0;
             border: 2px solid black;
             display: none;
+            box-shadow: 4px 4px 0 #000;
         }
 
         .titlebar {
@@ -46,6 +63,16 @@
             color: white;
             padding: 4px;
             font-size: 14px;
+            cursor: move;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .window button {
+            margin-left: 5px;
+            background: #c0c0c0;
+            border: 1px solid black;
+            cursor: pointer;
         }
 
         .content {
@@ -53,6 +80,7 @@
             font-size: 14px;
         }
 
+        /* Taskbar */
         .taskbar {
             position: fixed;
             bottom: 0;
@@ -105,24 +133,33 @@
             font-size: 24px;
             flex-direction: column;
         }
+
+        #powerOn {
+            background: red;
+            border: none;
+            padding: 10px 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+        }
     </style>
 </head>
-
 <body>
 
 <div class="desktop">
 
-    <div class="icon" onclick="openWindow()">
+    <div class="icon" onclick="openWindow('popup')">
         <img src="computer.png">
         <div>My Computer</div>
     </div>
 
-    <div class="icon" onclick="openWindow()">
+    <div class="icon" onclick="openWindow('docsWindow')">
         <img src="folder.png">
         <div>My Documents</div>
     </div>
 
-    <div class="icon" onclick="openWired()">
+    <div class="icon" onclick="openWindow('wiredWindow')">
         <img src="wired.png">
         <div>The Wired</div>
     </div>
@@ -131,28 +168,55 @@
 
 <!-- Normal Window -->
 <div class="window" id="popup">
-    <div class="titlebar">System</div>
+    <div class="titlebar">
+        System
+        <div>
+            <button onclick="minimize('popup')">_</button>
+            <button onclick="closeWindow('popup')">X</button>
+        </div>
+    </div>
     <div class="content">
         <p>Welcome to my digital room.</p>
         <p>Status: online</p>
     </div>
 </div>
 
+<!-- Docs Window -->
+<div class="window" id="docsWindow">
+    <div class="titlebar">
+        My Documents
+        <div>
+            <button onclick="minimize('docsWindow')">_</button>
+            <button onclick="closeWindow('docsWindow')">X</button>
+        </div>
+    </div>
+    <div class="content">
+        <p>Nothing to see here... yet.</p>
+    </div>
+</div>
+
 <!-- Wired Window -->
 <div class="window" id="wiredWindow">
-    <div class="titlebar">wired_connection.exe</div>
+    <div class="titlebar">
+        wired_connection.exe
+        <div>
+            <button onclick="minimize('wiredWindow')">_</button>
+            <button onclick="closeWindow('wiredWindow')">X</button>
+        </div>
+    </div>
     <div class="content">
         <p id="glitch">connection unstable...</p>
         <p>you are already here.</p>
         <p style="opacity:0.6;">there is no outside.</p>
         <br>
-        <button onclick="closeWired()">disconnect</button>
+        <button onclick="closeWindow('wiredWindow')">disconnect</button>
     </div>
 </div>
 
 <!-- Shutdown Screen -->
 <div id="shutdownScreen">
     <p>It is now safe to turn off your computer.</p>
+    <button id="powerOn" onclick="powerOn()">POWER ON</button>
 </div>
 
 <div class="taskbar">
@@ -160,40 +224,81 @@
     <div class="clock" id="clock"></div>
 </div>
 
+<div class="scanlines"></div>
+
 <script>
-function openWindow() {
-    document.getElementById("popup").style.display = "block";
+let zIndexCounter = 1;
+
+function openWindow(id) {
+    const win = document.getElementById(id);
+    win.style.display = "block";
+    win.style.zIndex = zIndexCounter++;
 }
 
-function openWired() {
-    document.getElementById("wiredWindow").style.display = "block";
+// Minimize
+function minimize(id) {
+    const win = document.getElementById(id);
+    win.style.display = "none";
 }
 
-function closeWired() {
-    document.getElementById("wiredWindow").style.display = "none";
+// Close
+function closeWindow(id) {
+    const win = document.getElementById(id);
+    win.style.display = "none";
 }
 
+// Shutdown
 function shutdown() {
     document.body.innerHTML = '';
-    document.getElementById("shutdownScreen").style.display = "flex";
+    document.body.appendChild(document.getElementById('shutdownScreen'));
+    document.getElementById('shutdownScreen').style.display = "flex";
 }
 
+// Power on
+function powerOn() {
+    location.reload();
+}
+
+// Clock
 function updateClock() {
     const now = new Date();
     document.getElementById("clock").innerText =
         now.getHours() + ":" +
         String(now.getMinutes()).padStart(2, '0');
 }
-
 setInterval(updateClock, 1000);
 updateClock();
 
+// Wired window glitch
 setInterval(() => {
     const text = document.getElementById("glitch");
-    if (text) {
-        text.style.opacity = Math.random();
+    if (text) text.style.opacity = Math.random();
+}, 150);
+
+// Draggable windows
+let dragTarget = null;
+let offsetX = 0;
+let offsetY = 0;
+
+document.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.titlebar')) {
+        dragTarget = e.target.closest('.window');
+        offsetX = e.clientX - dragTarget.offsetLeft;
+        offsetY = e.clientY - dragTarget.offsetTop;
+        dragTarget.style.zIndex = zIndexCounter++;
     }
-}, 200);
+});
+
+document.addEventListener('mousemove', (e) => {
+    if (dragTarget) {
+        dragTarget.style.left = (e.clientX - offsetX) + 'px';
+        dragTarget.style.top = (e.clientY - offsetY) + 'px';
+    }
+});
+
+document.addEventListener('mouseup', () => {
+    dragTarget = null;
+});
 </script>
 
 </body>
