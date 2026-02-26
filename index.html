@@ -65,7 +65,6 @@
       color: white;
       cursor: pointer;
       margin: 15px 0;
-      position: relative;
     }
 
     .icon img {
@@ -227,6 +226,23 @@
       cursor: pointer;
       margin-top: 20px;
     }
+
+    /* Secret Page */
+    #secretPage {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: black;
+      color: #0f0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Courier New', monospace;
+      font-size: 36px;
+      text-align: center;
+      z-index: 20000;
+      overflow: hidden;
+    }
   </style>
 </head>
 <body>
@@ -239,7 +255,7 @@
 
 <!-- Desktop Icons -->
 <div class="desktop">
-  <div class="icon" onclick="openWindow('popup')">
+  <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
     <img src="computer.png">
     <div>My Computer</div>
   </div>
@@ -249,7 +265,7 @@
     <div>My Documents</div>
   </div>
 
-  <div class="icon" onclick="openWindow('wiredWindow')">
+  <div class="icon" id="iconWired" onclick="openWindow('wiredWindow')">
     <img src="wired.png">
     <div>The Wired</div>
   </div>
@@ -259,7 +275,7 @@
     <div>Music Player</div>
   </div>
 
-  <div class="icon" onclick="openWindow('shedAlbum')">
+  <div class="icon" id="iconShed" onclick="openWindow('shedAlbum')">
     <img src="shed_icon.png">
     <div>Shed Album</div>
   </div>
@@ -355,6 +371,11 @@
   </div>
 </div>
 
+<!-- Secret Page -->
+<div id="secretPage">
+  <p id="secretText">You're not supposed to be here yet.</p>
+</div>
+
 <div id="shutdownScreen">
   <p>It is now safe to turn off your computer.</p>
   <button id="powerOn" onclick="powerOn()">POWER ON</button>
@@ -433,33 +454,6 @@ document.addEventListener('mousemove', e=>{
 });
 document.addEventListener('mouseup', ()=>{dragTarget=null;});
 
-// Draggable desktop icons
-const icons = document.querySelectorAll('.desktop .icon');
-icons.forEach(icon => {
-  let dragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
-
-  icon.addEventListener('mousedown', e => {
-    dragging = true;
-    offsetX = e.clientX - icon.offsetLeft;
-    offsetY = e.clientY - icon.offsetTop;
-    icon.style.position = 'absolute';
-    icon.style.zIndex = zIndexCounter++;
-  });
-
-  document.addEventListener('mousemove', e => {
-    if(dragging) {
-      icon.style.left = (e.clientX - offsetX) + 'px';
-      icon.style.top = (e.clientY - offsetY) + 'px';
-    }
-  });
-
-  document.addEventListener('mouseup', e => {
-    dragging = false;
-  });
-});
-
 // Music Player
 const playlist = [
   {name: "Song One", src: "song1.mp3"},
@@ -505,7 +499,7 @@ const shedTrackNames = [
 const shedAudio = document.getElementById("shedPlayer");
 let currentShedTrack = -1;
 
-// Ensure tracks clickable
+// Shed tracks clickable
 window.addEventListener('DOMContentLoaded', () => {
   const shedTrackElems = document.querySelectorAll("#shedTracklist li");
   shedTrackElems.forEach((li,index)=>{
@@ -513,12 +507,12 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// Shed track functions
 function playShedTrack(index){
   shedAudio.src = shedTracks[index];
   shedAudio.play();
   updateShedHighlight(index);
 }
-
 function updateShedHighlight(index){
   const shedTrackElems = document.querySelectorAll("#shedTracklist li");
   shedTrackElems.forEach((li,i)=>{
@@ -528,8 +522,6 @@ function updateShedHighlight(index){
   });
   currentShedTrack = index;
 }
-
-// Auto advance
 shedAudio.addEventListener('ended', ()=>{
   let next = (currentShedTrack+1) % shedTracks.length;
   playShedTrack(next);
@@ -541,6 +533,36 @@ setInterval(()=>{
   albumWin.style.opacity = albumWin.style.opacity === "0.95" ? "1" : "0.95";
 }, 150);
 
+// Secret Page
+const secretSequence = ["iconShed","iconMyComputer"];
+let clickSequence = [];
+
+function registerClick(id){
+  clickSequence.push(id);
+  if(clickSequence.length > secretSequence.length){
+    clickSequence.shift();
+  }
+  if(JSON.stringify(clickSequence) === JSON.stringify(secretSequence)){
+    document.getElementById("secretPage").style.display = "flex";
+  }
+}
+
+// Hook icons to secret page
+["iconShed","iconMyComputer"].forEach(id=>{
+  const icon = document.getElementById(id);
+  const oldOnClick = icon.onclick;
+  icon.onclick = () => { registerClick(id); oldOnClick(); };
+});
+
+// Secret page CRT distortion
+setInterval(()=>{
+  const secretText = document.getElementById("secretText");
+  if(secretText){
+    secretText.style.transform = `translate(${Math.random()*8-4}px, ${Math.random()*4-2}px)`;
+    secretText.style.color = Math.random() > 0.5 ? "#0f0" : "#0ff";
+  }
+},100);
 </script>
+
 </body>
 </html>
