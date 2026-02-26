@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Desktop</title>
+    <title>ash_desktop</title>
 
     <style>
         body {
@@ -11,13 +11,19 @@
             overflow: hidden;
         }
 
-        /* Desktop Icons */
+        .desktop {
+            display: flex;
+            flex-direction: column;
+            width: 100px;
+            padding: 10px;
+        }
+
         .icon {
             width: 80px;
             text-align: center;
             color: white;
             cursor: pointer;
-            margin: 20px;
+            margin: 15px 0;
         }
 
         .icon img {
@@ -25,16 +31,6 @@
             image-rendering: pixelated;
         }
 
-        .desktop {
-            display: flex;
-            flex-direction: column;
-            width: 100px;
-             <div class="icon" onclick="openWired()">
-        <img src="wired.png">
-        <div>The Wired</div>
-        }
-
-        /* Window */
         .window {
             position: absolute;
             top: 120px;
@@ -57,7 +53,6 @@
             font-size: 14px;
         }
 
-        /* Taskbar */
         .taskbar {
             position: fixed;
             bottom: 0;
@@ -83,12 +78,40 @@
             margin-right: 10px;
             font-size: 14px;
         }
+
+        /* Wired Window */
+        #wiredWindow {
+            background: #111;
+            color: #0f0;
+            border: 2px solid #0f0;
+            top: 150px;
+            left: 250px;
+        }
+
+        #wiredWindow .titlebar {
+            background: linear-gradient(to right,#200,#900);
+        }
+
+        /* Shutdown Screen */
+        #shutdownScreen {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: black;
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-direction: column;
+        }
     </style>
 </head>
 
 <body>
 
 <div class="desktop">
+
     <div class="icon" onclick="openWindow()">
         <img src="computer.png">
         <div>My Computer</div>
@@ -98,24 +121,61 @@
         <img src="folder.png">
         <div>My Documents</div>
     </div>
+
+    <div class="icon" onclick="openWired()">
+        <img src="wired.png">
+        <div>The Wired</div>
+    </div>
+
 </div>
 
+<!-- Normal Window -->
 <div class="window" id="popup">
     <div class="titlebar">System</div>
     <div class="content">
-        <p>my digital space.</p>
-        <p>Status: connected</p>
+        <p>Welcome to my digital room.</p>
+        <p>Status: online</p>
     </div>
 </div>
 
+<!-- Wired Window -->
+<div class="window" id="wiredWindow">
+    <div class="titlebar">wired_connection.exe</div>
+    <div class="content">
+        <p id="glitch">connection unstable...</p>
+        <p>you are already here.</p>
+        <p style="opacity:0.6;">there is no outside.</p>
+        <br>
+        <button onclick="closeWired()">disconnect</button>
+    </div>
+</div>
+
+<!-- Shutdown Screen -->
+<div id="shutdownScreen">
+    <p>It is now safe to turn off your computer.</p>
+</div>
+
 <div class="taskbar">
-    <div class="start">Start</div>
+    <div class="start" onclick="shutdown()">Shut Down</div>
     <div class="clock" id="clock"></div>
 </div>
 
 <script>
 function openWindow() {
     document.getElementById("popup").style.display = "block";
+}
+
+function openWired() {
+    document.getElementById("wiredWindow").style.display = "block";
+}
+
+function closeWired() {
+    document.getElementById("wiredWindow").style.display = "none";
+}
+
+function shutdown() {
+    document.body.innerHTML = '';
+    document.getElementById("shutdownScreen").style.display = "flex";
 }
 
 function updateClock() {
@@ -127,6 +187,13 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+
+setInterval(() => {
+    const text = document.getElementById("glitch");
+    if (text) {
+        text.style.opacity = Math.random();
+    }
+}, 200);
 </script>
 
 </body>
