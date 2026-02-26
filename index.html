@@ -1,54 +1,130 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Desktop</title>
 
     <style>
         body {
-            background-color: #1b2a1f; /* deep forest green */
-            color: #d8e4cf; /* soft moss text */
-            font-family: Georgia, serif;
+            margin: 0;
+            background: #008080;
+            font-family: "Tahoma", sans-serif;
+            overflow: hidden;
+        }
+
+        /* Desktop Icons */
+        .icon {
+            width: 80px;
             text-align: center;
-            padding: 40px;
+            color: white;
+            cursor: pointer;
+            margin: 20px;
         }
 
-        h1 {
-            font-size: 48px;
-            color: #a3c9a8;
+        .icon img {
+            width: 48px;
+            image-rendering: pixelated;
         }
 
-        p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: auto;
+        .desktop {
+            display: flex;
+            flex-direction: column;
+            width: 100px;
         }
 
-        img {
-            width: 300px;
-            margin-top: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        /* Window */
+        .window {
+            position: absolute;
+            top: 120px;
+            left: 200px;
+            width: 400px;
+            background: #c0c0c0;
+            border: 2px solid black;
+            display: none;
         }
 
-        .card {
-            background-color: #2f4633;
-            padding: 30px;
-            border-radius: 20px;
-            display: inline-block;
-            margin-top: 40px;
+        .titlebar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            padding: 4px;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 15px;
+            font-size: 14px;
+        }
+
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 40px;
+            background: #c0c0c0;
+            border-top: 2px solid #000;
+            display: flex;
+            align-items: center;
+        }
+
+        .start {
+            background: #c0c0c0;
+            border: 2px solid black;
+            margin: 5px;
+            padding: 5px 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .clock {
+            margin-left: auto;
+            margin-right: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
 
 <body>
 
-    <h1> this website shit is easy.</h1>
-
-    <div class="card">
-        <p>
-            Hello everynyan
-             <img src="Car.jpg" alt="Car">
-
+<div class="desktop">
+    <div class="icon" onclick="openWindow()">
+        <img src="computer.png">
+        <div>My Computer</div>
     </div>
+
+    <div class="icon" onclick="openWindow()">
+        <img src="folder.png">
+        <div>My Documents</div>
+    </div>
+</div>
+
+<div class="window" id="popup">
+    <div class="titlebar">System</div>
+    <div class="content">
+        <p>my digital space.</p>
+        <p>Status: connected</p>
+    </div>
+</div>
+
+<div class="taskbar">
+    <div class="start">Start</div>
+    <div class="clock" id="clock"></div>
+</div>
+
+<script>
+function openWindow() {
+    document.getElementById("popup").style.display = "block";
+}
+
+function updateClock() {
+    const now = new Date();
+    document.getElementById("clock").innerText =
+        now.getHours() + ":" +
+        String(now.getMinutes()).padStart(2, '0');
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
 
 </body>
 </html>
