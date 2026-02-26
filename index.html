@@ -157,31 +157,50 @@
       border: 1px solid #0f0;
     }
 
-    /* Album Window */
+    /* Shed Album Window */
     #shedAlbum {
       background: #222;
       color: #0f0;
       border: 2px solid #0f0;
       font-family: "Courier New", monospace;
       text-align: center;
+      transition: opacity 0.1s;
     }
 
     #shedAlbum img {
       width: 200px;
       margin-bottom: 10px;
+      animation: pulse 2s infinite;
+      border: 2px solid #0f0;
+      box-shadow: 0 0 10px #0f0;
     }
 
-    #shedAlbum ul {
+    @keyframes pulse {
+      0% { transform: scale(1); box-shadow: 0 0 10px #0f0; }
+      50% { transform: scale(1.05); box-shadow: 0 0 20px #0f0; }
+      100% { transform: scale(1); box-shadow: 0 0 10px #0f0; }
+    }
+
+    #shedTracklist {
       list-style:none;
       padding:0;
     }
 
-    #shedAlbum li {
+    #shedTracklist li {
       margin:5px 0;
       cursor:pointer;
+      transition: color 0.2s, transform 0.2s;
     }
 
-    #shedAlbum li:hover { color:#ff0; }
+    #shedTracklist li:hover { 
+      color: #ff0; 
+      transform: scale(1.05);
+    }
+
+    #shedTracklist li.current {
+      color: #0ff;
+      font-weight: bold;
+    }
 
     /* Shutdown Screen */
     #shutdownScreen {
@@ -324,17 +343,17 @@
   <div class="content">
     <img src="shed_cover.jpg" alt="Shed Album Cover">
     <ul id="shedTracklist">
-      <li onclick="playShedTrack(0)">1. Head in the Ceiling Fan</li>
-      <li onclick="playShedTrack(1)">2. Secret Society</li>
-      <li onclick="playShedTrack(2)">3. Symmetry</li>
-      <li onclick="playShedTrack(3)">4. Say Nothing</li>
-      <li onclick="playShedTrack(4)">5. Alone</li>
-      <li onclick="playShedTrack(5)">6. Your Pain</li>
-      <li onclick="playShedTrack(6)">7. 27</li>
-      <li onclick="playShedTrack(7)">8. Home</li>
-      <li onclick="playShedTrack(8)">9. Call</li>
-      <li onclick="playShedTrack(9)">10. Shed</li>
-      <li onclick="playShedTrack(10)">11. Your Pain (Reprise)</li>
+      <li onclick="playShedTrack(0)">Coxton Yard</li>
+      <li onclick="playShedTrack(1)">Shed</li>
+      <li onclick="playShedTrack(2)">Flood of '72</li>
+      <li onclick="playShedTrack(3)">Society</li>
+      <li onclick="playShedTrack(4)">You Can't Say Kingston Doesn't Love You</li>
+      <li onclick="playShedTrack(5)">Crescent-Shaped Depression</li>
+      <li onclick="playShedTrack(6)">Safe in Your Skin</li>
+      <li onclick="playShedTrack(7)">Where Am I?</li>
+      <li onclick="playShedTrack(8)">Your Screen Door</li>
+      <li onclick="playShedTrack(9)">27</li>
+      <li onclick="playShedTrack(10)">Stab</li>
     </ul>
   </div>
 </div>
@@ -420,7 +439,7 @@ document.addEventListener('mousemove', e=>{
 });
 document.addEventListener('mouseup', ()=>{dragTarget=null;});
 
-// Playlist for music player
+// Music Player
 const playlist = [
   {name: "Song One", src: "song1.mp3"},
   {name: "Song Two", src: "song2.mp3"},
@@ -444,16 +463,54 @@ function playPause(){if(audio.paused) audio.play(); else audio.pause();}
 audio.addEventListener('ended', nextTrack);
 loadTrack(0);
 
-// Shed album player
+// Shed Album Player
 const shedTracks = [
   "shed01.mp3","shed02.mp3","shed03.mp3","shed04.mp3","shed05.mp3",
   "shed06.mp3","shed07.mp3","shed08.mp3","shed09.mp3","shed10.mp3","shed11.mp3"
 ];
+const shedTrackNames = [
+  "Coxton Yard",
+  "Shed",
+  "Flood of '72",
+  "Society",
+  "You Can't Say Kingston Doesn't Love You",
+  "Crescent-Shaped Depression",
+  "Safe in Your Skin",
+  "Where Am I?",
+  "Your Screen Door",
+  "27",
+  "Stab"
+];
 const shedAudio = document.getElementById("shedPlayer");
+const shedTrackElems = document.querySelectorAll("#shedTracklist li");
+let currentShedTrack = -1;
+
 function playShedTrack(index){
   shedAudio.src = shedTracks[index];
   shedAudio.play();
+  updateShedHighlight(index);
 }
+
+function updateShedHighlight(index){
+  shedTrackElems.forEach((li,i)=>{
+    li.innerText = shedTrackNames[i];
+    if(i===index) li.classList.add("current");
+    else li.classList.remove("current");
+  });
+  currentShedTrack = index;
+}
+
+shedAudio.addEventListener('ended', ()=>{
+  let next = (currentShedTrack+1) % shedTracks.length;
+  playShedTrack(next);
+});
+
+// Album window CRT flicker
+setInterval(()=>{
+  const albumWin = document.getElementById("shedAlbum");
+  albumWin.style.opacity = albumWin.style.opacity === "0.95" ? "1" : "0.95";
+}, 150);
+
 </script>
 </body>
 </html>
