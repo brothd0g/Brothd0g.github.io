@@ -65,6 +65,7 @@
       color: white;
       cursor: pointer;
       margin: 15px 0;
+      position: relative;
     }
 
     .icon img {
@@ -264,7 +265,7 @@
   </div>
 </div>
 
-<!-- Normal Window -->
+<!-- Windows -->
 <div class="window" id="popup">
   <div class="titlebar">
     System
@@ -279,7 +280,6 @@
   </div>
 </div>
 
-<!-- Docs Window -->
 <div class="window" id="docsWindow">
   <div class="titlebar">
     My Documents
@@ -293,7 +293,6 @@
   </div>
 </div>
 
-<!-- Wired Window -->
 <div class="window" id="wiredWindow">
   <div class="titlebar">
     wired_connection.exe
@@ -311,7 +310,6 @@
   </div>
 </div>
 
-<!-- Music Player Window -->
 <div class="window" id="musicWindow">
   <div class="titlebar">
     Music Player
@@ -331,7 +329,6 @@
   </div>
 </div>
 
-<!-- Shed Album Window -->
 <div class="window" id="shedAlbum">
   <div class="titlebar">
     Shed - Title Fight
@@ -343,28 +340,26 @@
   <div class="content">
     <img src="shed_cover.jpg" alt="Shed Album Cover">
     <ul id="shedTracklist">
-      <li onclick="playShedTrack(0)">Coxton Yard</li>
-      <li onclick="playShedTrack(1)">Shed</li>
-      <li onclick="playShedTrack(2)">Flood of '72</li>
-      <li onclick="playShedTrack(3)">Society</li>
-      <li onclick="playShedTrack(4)">You Can't Say Kingston Doesn't Love You</li>
-      <li onclick="playShedTrack(5)">Crescent-Shaped Depression</li>
-      <li onclick="playShedTrack(6)">Safe in Your Skin</li>
-      <li onclick="playShedTrack(7)">Where Am I?</li>
-      <li onclick="playShedTrack(8)">Your Screen Door</li>
-      <li onclick="playShedTrack(9)">27</li>
-      <li onclick="playShedTrack(10)">Stab</li>
+      <li>Coxton Yard</li>
+      <li>Shed</li>
+      <li>Flood of '72</li>
+      <li>Society</li>
+      <li>You Can't Say Kingston Doesn't Love You</li>
+      <li>Crescent-Shaped Depression</li>
+      <li>Safe in Your Skin</li>
+      <li>Where Am I?</li>
+      <li>Your Screen Door</li>
+      <li>27</li>
+      <li>Stab</li>
     </ul>
   </div>
 </div>
 
-<!-- Shutdown Screen -->
 <div id="shutdownScreen">
   <p>It is now safe to turn off your computer.</p>
   <button id="powerOn" onclick="powerOn()">POWER ON</button>
 </div>
 
-<!-- Taskbar -->
 <div class="taskbar">
   <div class="start" onclick="shutdown()">Shut Down</div>
   <div class="clock" id="clock"></div>
@@ -372,14 +367,13 @@
 
 <div class="scanlines"></div>
 
-<!-- Audio -->
 <audio id="startupSound" src="startup.wav"></audio>
 <audio id="shedPlayer"></audio>
 
 <script>
 let zIndexCounter = 1;
 
-// Boot sequence
+// Boot
 window.addEventListener('load', () => {
   const boot = document.getElementById('bootScreen');
   const sound = document.getElementById('startupSound');
@@ -394,7 +388,7 @@ function openWindow(id) {
   win.style.zIndex = zIndexCounter++;
 }
 
-// Minimize & close
+// Minimize / close
 function minimize(id){document.getElementById(id).style.display="none";}
 function closeWindow(id){document.getElementById(id).style.display="none";}
 
@@ -415,7 +409,7 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-// Wired window glitch
+// Wired glitch
 setInterval(()=>{
   const text=document.getElementById("glitch");
   if(text) text.style.opacity=Math.random();
@@ -438,6 +432,33 @@ document.addEventListener('mousemove', e=>{
   }
 });
 document.addEventListener('mouseup', ()=>{dragTarget=null;});
+
+// Draggable desktop icons
+const icons = document.querySelectorAll('.desktop .icon');
+icons.forEach(icon => {
+  let dragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
+
+  icon.addEventListener('mousedown', e => {
+    dragging = true;
+    offsetX = e.clientX - icon.offsetLeft;
+    offsetY = e.clientY - icon.offsetTop;
+    icon.style.position = 'absolute';
+    icon.style.zIndex = zIndexCounter++;
+  });
+
+  document.addEventListener('mousemove', e => {
+    if(dragging) {
+      icon.style.left = (e.clientX - offsetX) + 'px';
+      icon.style.top = (e.clientY - offsetY) + 'px';
+    }
+  });
+
+  document.addEventListener('mouseup', e => {
+    dragging = false;
+  });
+});
 
 // Music Player
 const playlist = [
@@ -463,7 +484,7 @@ function playPause(){if(audio.paused) audio.play(); else audio.pause();}
 audio.addEventListener('ended', nextTrack);
 loadTrack(0);
 
-// Shed Album Player
+// Shed Album
 const shedTracks = [
   "shed01.mp3","shed02.mp3","shed03.mp3","shed04.mp3","shed05.mp3",
   "shed06.mp3","shed07.mp3","shed08.mp3","shed09.mp3","shed10.mp3","shed11.mp3"
@@ -482,8 +503,15 @@ const shedTrackNames = [
   "Stab"
 ];
 const shedAudio = document.getElementById("shedPlayer");
-const shedTrackElems = document.querySelectorAll("#shedTracklist li");
 let currentShedTrack = -1;
+
+// Ensure tracks clickable
+window.addEventListener('DOMContentLoaded', () => {
+  const shedTrackElems = document.querySelectorAll("#shedTracklist li");
+  shedTrackElems.forEach((li,index)=>{
+    li.addEventListener('click', () => playShedTrack(index));
+  });
+});
 
 function playShedTrack(index){
   shedAudio.src = shedTracks[index];
@@ -492,6 +520,7 @@ function playShedTrack(index){
 }
 
 function updateShedHighlight(index){
+  const shedTrackElems = document.querySelectorAll("#shedTracklist li");
   shedTrackElems.forEach((li,i)=>{
     li.innerText = shedTrackNames[i];
     if(i===index) li.classList.add("current");
@@ -500,6 +529,7 @@ function updateShedHighlight(index){
   currentShedTrack = index;
 }
 
+// Auto advance
 shedAudio.addEventListener('ended', ()=>{
   let next = (currentShedTrack+1) % shedTracks.length;
   playShedTrack(next);
