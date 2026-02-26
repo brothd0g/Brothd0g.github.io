@@ -24,6 +24,7 @@
         transparent 2px,
         transparent 4px
       );
+      z-index: 999;
     }
 
     /* Boot Screen */
@@ -38,7 +39,7 @@
       align-items: center;
       justify-content: center;
       font-size: 24px;
-      z-index: 9999;
+      z-index: 10000;
     }
 
     #bootScreen img {
@@ -55,6 +56,7 @@
       position: absolute;
       top: 10px;
       left: 10px;
+      z-index: 1;
     }
 
     .icon {
@@ -73,8 +75,6 @@
     /* Windows */
     .window {
       position: absolute;
-      top: 120px;
-      left: 200px;
       width: 400px;
       background: #c0c0c0;
       border: 2px solid black;
@@ -137,8 +137,6 @@
       background: #111;
       color: #0f0;
       border: 2px solid #0f0;
-      top: 150px;
-      left: 250px;
     }
 
     #wiredWindow .titlebar {
@@ -147,10 +145,16 @@
 
     /* Music Player Window */
     #musicWindow {
-      background: #c0c0c0;
-      border: 2px solid black;
-      top: 200px;
-      left: 300px;
+      background: #222;
+      color: #0f0;
+      border: 2px solid #0f0;
+      font-family: "Courier New", monospace;
+    }
+
+    #musicWindow button {
+      background: #555;
+      color: white;
+      border: 1px solid #0f0;
     }
 
     /* Shutdown Screen */
@@ -165,6 +169,7 @@
       justify-content: center;
       font-size: 24px;
       flex-direction: column;
+      z-index: 10000;
     }
 
     #powerOn {
@@ -265,11 +270,14 @@
       <button onclick="closeWindow('musicWindow')">X</button>
     </div>
   </div>
-  <div class="content">
-    <p>Play your MP3s below:</p>
-    <audio controls>
-      <source src="song.mp3" type="audio/mpeg">
-    </audio>
+  <div class="content" style="display:flex; flex-direction:column; align-items:center;">
+    <p id="currentTrack" style="font-weight:bold; margin-bottom:10px;">Track: None</p>
+    <audio id="audioPlayer" controls style="width:90%;"></audio>
+    <div style="margin-top:10px;">
+      <button onclick="prevTrack()">⏮️</button>
+      <button onclick="playPause()">▶️/⏸️</button>
+      <button onclick="nextTrack()">⏭️</button>
+    </div>
   </div>
 </div>
 
@@ -298,9 +306,7 @@ window.addEventListener('load', () => {
   const boot = document.getElementById('bootScreen');
   const sound = document.getElementById('startupSound');
   sound.play();
-  setTimeout(() => {
-    boot.style.display = 'none';
-  }, 4000); // 4 seconds boot
+  setTimeout(() => { boot.style.display = 'none'; }, 4000);
 });
 
 // Open windows
@@ -354,6 +360,32 @@ document.addEventListener('mousemove', e=>{
   }
 });
 document.addEventListener('mouseup', ()=>{dragTarget=null;});
+
+// Playlist for music player
+const playlist = [
+  {name: "Song One", src: "song1.mp3"},
+  {name: "Song Two", src: "song2.mp3"},
+  {name: "Song Three", src: "song3.mp3"}
+];
+let currentTrackIndex = 0;
+const audio = document.getElementById("audioPlayer");
+const trackLabel = document.getElementById("currentTrack");
+
+function loadTrack(index){
+  if(index<0) index=playlist.length-1;
+  if(index>=playlist.length) index=0;
+  currentTrackIndex=index;
+  audio.src=playlist[currentTrackIndex].src;
+  trackLabel.innerText="Track: "+playlist[currentTrackIndex].name;
+  audio.play();
+}
+function nextTrack(){loadTrack(currentTrackIndex+1);}
+function prevTrack(){loadTrack(currentTrackIndex-1);}
+function playPause(){if(audio.paused) audio.play(); else audio.pause();}
+audio.addEventListener('ended', nextTrack);
+loadTrack(0);
+
 </script>
+
 </body>
 </html>
