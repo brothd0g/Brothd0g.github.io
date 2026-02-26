@@ -11,7 +11,7 @@
       background-size: cover;
     }
 
-    /* CRT Scanlines */
+    /* Strong CRT Scanlines */
     .scanlines {
       position: fixed;
       width: 100%;
@@ -19,8 +19,8 @@
       pointer-events: none;
       background: repeating-linear-gradient(
         to bottom,
-        rgba(0,0,0,0.03) 0px,
-        rgba(0,0,0,0.03) 1px,
+        rgba(0,0,0,0.08) 0px,
+        rgba(0,0,0,0.08) 2px,
         transparent 2px,
         transparent 4px
       );
@@ -157,6 +157,32 @@
       border: 1px solid #0f0;
     }
 
+    /* Album Window */
+    #shedAlbum {
+      background: #222;
+      color: #0f0;
+      border: 2px solid #0f0;
+      font-family: "Courier New", monospace;
+      text-align: center;
+    }
+
+    #shedAlbum img {
+      width: 200px;
+      margin-bottom: 10px;
+    }
+
+    #shedAlbum ul {
+      list-style:none;
+      padding:0;
+    }
+
+    #shedAlbum li {
+      margin:5px 0;
+      cursor:pointer;
+    }
+
+    #shedAlbum li:hover { color:#ff0; }
+
     /* Shutdown Screen */
     #shutdownScreen {
       position: fixed;
@@ -211,6 +237,11 @@
   <div class="icon" onclick="openWindow('musicWindow')">
     <img src="music.png">
     <div>Music Player</div>
+  </div>
+
+  <div class="icon" onclick="openWindow('shedAlbum')">
+    <img src="shed_icon.png">
+    <div>Shed Album</div>
   </div>
 </div>
 
@@ -281,6 +312,33 @@
   </div>
 </div>
 
+<!-- Shed Album Window -->
+<div class="window" id="shedAlbum">
+  <div class="titlebar">
+    Shed - Title Fight
+    <div>
+      <button onclick="minimize('shedAlbum')">_</button>
+      <button onclick="closeWindow('shedAlbum')">X</button>
+    </div>
+  </div>
+  <div class="content">
+    <img src="shed_cover.jpg" alt="Shed Album Cover">
+    <ul id="shedTracklist">
+      <li onclick="playShedTrack(0)">1. Head in the Ceiling Fan</li>
+      <li onclick="playShedTrack(1)">2. Secret Society</li>
+      <li onclick="playShedTrack(2)">3. Symmetry</li>
+      <li onclick="playShedTrack(3)">4. Say Nothing</li>
+      <li onclick="playShedTrack(4)">5. Alone</li>
+      <li onclick="playShedTrack(5)">6. Your Pain</li>
+      <li onclick="playShedTrack(6)">7. 27</li>
+      <li onclick="playShedTrack(7)">8. Home</li>
+      <li onclick="playShedTrack(8)">9. Call</li>
+      <li onclick="playShedTrack(9)">10. Shed</li>
+      <li onclick="playShedTrack(10)">11. Your Pain (Reprise)</li>
+    </ul>
+  </div>
+</div>
+
 <!-- Shutdown Screen -->
 <div id="shutdownScreen">
   <p>It is now safe to turn off your computer.</p>
@@ -297,6 +355,7 @@
 
 <!-- Audio -->
 <audio id="startupSound" src="startup.wav"></audio>
+<audio id="shedPlayer"></audio>
 
 <script>
 let zIndexCounter = 1;
@@ -385,7 +444,16 @@ function playPause(){if(audio.paused) audio.play(); else audio.pause();}
 audio.addEventListener('ended', nextTrack);
 loadTrack(0);
 
+// Shed album player
+const shedTracks = [
+  "shed01.mp3","shed02.mp3","shed03.mp3","shed04.mp3","shed05.mp3",
+  "shed06.mp3","shed07.mp3","shed08.mp3","shed09.mp3","shed10.mp3","shed11.mp3"
+];
+const shedAudio = document.getElementById("shedPlayer");
+function playShedTrack(index){
+  shedAudio.src = shedTracks[index];
+  shedAudio.play();
+}
 </script>
-
 </body>
 </html>
