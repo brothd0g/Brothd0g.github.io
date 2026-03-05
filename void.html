@@ -11,25 +11,31 @@
       overflow:hidden;
       display:flex;
       justify-content:center;
-      align-items:center;
+      align-items:flex-start;
       flex-direction:column;
       height:100vh;
-      cursor:none;
+      cursor:default;
     }
+
     #voidText {
       font-size:32px;
       text-align:center;
       position:relative;
       z-index:1;
+      margin-top:20px;
     }
+
     .glitch {
       position:absolute;
       color:#0ff;
       font-size:32px;
       user-select:none;
-      pointer-events:none;
+      pointer-events:none; /* allow input clicks through glitches */
     }
+
     #chatWindow {
+      position:relative;
+      z-index:9999;
       width:400px;
       height:250px;
       overflow-y:auto;
@@ -40,7 +46,10 @@
       font-family:'Courier New', monospace;
       margin-top:20px;
     }
+
     #chatInput {
+      position:relative;
+      z-index:10000;
       width:400px;
       background:black;
       color:#0f0;
@@ -48,13 +57,15 @@
       padding:5px;
       font-family:'Courier New', monospace;
       margin-top:5px;
+      cursor:text;
     }
+
     .flash {
       position:fixed;
       top:0; left:0;
       width:100%; height:100%;
       background:white;
-      z-index:9999;
+      z-index:99999;
       display:none;
     }
   </style>
@@ -64,7 +75,7 @@
 <div id="voidText">YOU SHOULD NOT BE HERE</div>
 
 <div id="chatWindow"></div>
-<input id="chatInput" type="text" placeholder="type a message...">
+<input id="chatInput" type="text" placeholder="type a message..." autofocus>
 <div class="flash" id="flashScreen"></div>
 
 <audio id="glitchAudio" src="glitch_hum.mp3" autoplay loop></audio>
@@ -79,11 +90,11 @@ const chatInput = document.getElementById('chatInput');
 const beepAudio = document.getElementById('beepAudio');
 const secretAudio = document.getElementById('secretAudio');
 
-// --- Random cursor ---
+// --- Random cursor flicker ---
 let cursorVisible = true;
 setInterval(()=>{
   cursorVisible = !cursorVisible;
-  document.body.style.cursor = cursorVisible ? 'block':'text';
+  chatInput.style.caretColor = cursorVisible ? '#0f0' : '#0ff';
 }, 400 + Math.random()*400);
 
 // --- Blackout flashes ---
@@ -111,7 +122,7 @@ setInterval(()=>{
   setTimeout(()=>glitch.remove(),1500);
 },100);
 
-// --- Stack numbers / shapes ---
+// --- Stack numbers / shapes for clues ---
 function stackShape(str,x,y,color="#0f0"){
   for(let i=0;i<str.length;i++){
     const g=document.createElement('div');
@@ -130,7 +141,7 @@ setInterval(()=>{
   }
 },1500);
 
-// --- Flicker main text ---
+// --- Flicker main void text ---
 setInterval(()=>{
   voidText.style.color = Math.random()>0.5?'#0f0':'#0ff';
   voidText.style.transform = `translate(${Math.random()*6-3}px,${Math.random()*6-3}px)`;
@@ -138,11 +149,11 @@ setInterval(()=>{
 
 // --- Chatbot ---
 const responses = {
-  hello: "Hello...how did you find me?",
-  wake up: "im up bruh",
+  hello: "Hello, wanderer... how did you find me.",
+  wake: "im up bruh...",
   help: "There is no help here. Only questions.",
   reveal: "A hidden wallpaper appears...",
-  glitch: "You feel the void glitch around you.",
+  glitch: "what did you expect dawg. ima glitch.",
   default: "I do not understand..."
 };
 
