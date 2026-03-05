@@ -60,13 +60,10 @@
       cursor:text;
     }
 
-    .flash {
-      position:fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background:white;
-      z-index:99999;
-      display:none;
+    .chatImage {
+      width:100%;
+      margin:5px 0;
+      border:1px solid #0f0;
     }
   </style>
 </head>
@@ -76,19 +73,19 @@
 
 <div id="chatWindow"></div>
 <input id="chatInput" type="text" placeholder="type a message..." autofocus>
-<div class="flash" id="flashScreen"></div>
 
 <audio id="glitchAudio" src="glitch_hum.mp3" autoplay loop></audio>
 <audio id="beepAudio" src="beep.wav"></audio>
 <audio id="secretAudio" src="secret_sound.mp3"></audio>
+<audio id="song1" src="song1.mp3"></audio>
 
 <script>
 const voidText = document.getElementById('voidText');
-const flashScreen = document.getElementById('flashScreen');
 const chatWindow = document.getElementById('chatWindow');
 const chatInput = document.getElementById('chatInput');
 const beepAudio = document.getElementById('beepAudio');
 const secretAudio = document.getElementById('secretAudio');
+const song1 = document.getElementById('song1');
 
 // --- Random cursor flicker ---
 let cursorVisible = true;
@@ -96,14 +93,6 @@ setInterval(()=>{
   cursorVisible = !cursorVisible;
   chatInput.style.caretColor = cursorVisible ? '#0f0' : '#0ff';
 }, 400 + Math.random()*400);
-
-// --- Blackout flashes ---
-setInterval(()=>{
-  if(Math.random()<0.08){
-    flashScreen.style.display='block';
-    setTimeout(()=>flashScreen.style.display='none',100);
-  }
-},200);
 
 // --- Random beeps ---
 setInterval(()=>{
@@ -149,12 +138,21 @@ setInterval(()=>{
 
 // --- Chatbot ---
 const responses = {
-  hello: "Hello, wanderer... how did you find me.",
+  hello: "Hello, wanderer... How did you find me?",
   wake: "im up bruh...",
   help: "There is no help here. Only questions.",
-  reveal: "A hidden wallpaper appears...",
-  glitch: "what did you expect dawg. ima glitch.",
-  default: "I do not understand..."
+  reveal: "i added a cat, hope she doesnt scare you to much...",
+  glitch: "You feel the void glitch around you.",
+  chatlog: "You see old conversations...",
+  default: "I do not understand...",
+  Ass: "what the fuck man",
+  why: "I dont really know...",
+  Pineapple: "pen pineapple apple pen. mhm. do you remember?",
+  Apple: "pen pineapple apple pen. mhm. do you remember?", 
+  worm: "worm",
+  Katstands: "GO TO KATSTANDS.COM GOATED OMG", 
+  cokeillennials: "Cocaine first found its uses as a topical anisthetic. Surgeons in the late to early 19th and 20th centuries began experimenting with cocaine by sprinkling it into their eyes and poking at them with syringes and scalpels. Cocaine quickly spread into medicine as a cure-all, and even found its way into cola. The widespread public usage of cocaine led to many children to be born disformed, and because of the era's primitave medicine, many died.The babies who did survive often had excelerated IQs, although this trend would not be discovered until the 1990s.",
+  break: "shit okay" 
 };
 
 chatInput.addEventListener('keydown', e=>{
@@ -192,6 +190,21 @@ chatInput.addEventListener('keydown', e=>{
         document.body.appendChild(g);
         setTimeout(()=>g.remove(),3000);
       }
+    }
+    if(message.toLowerCase().includes('chatlog')){
+      // Display old chat log images
+      const img1 = document.createElement('img');
+      img1.src = 'chat1.png';
+      img1.className = 'chatImage';
+      chatWindow.appendChild(img1);
+
+      const img2 = document.createElement('img');
+      img2.src = 'chat2.png';
+      img2.className = 'chatImage';
+      chatWindow.appendChild(img2);
+    }
+    if(message.toLowerCase().includes('gorillaz')){
+      song1.play();
     }
   }
 });
