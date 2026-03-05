@@ -4,117 +4,117 @@
   <title>ash_desktop</title>
   <style>
     body {
-      margin: 0;
-      font-family: "Tahoma", sans-serif;
-      overflow: hidden;
-      background: url('bliss.jpg') no-repeat center center fixed;
-      background-size: cover;
+      margin:0;
+      font-family:"Tahoma",sans-serif;
+      overflow:hidden;
+      background:url('bliss.jpg') no-repeat center center fixed;
+      background-size:cover;
     }
 
+    /* CRT Scanlines */
     .scanlines {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      background: repeating-linear-gradient(
-        to bottom,
+      position:fixed;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      background:repeating-linear-gradient(to bottom,
         rgba(0,0,0,0.08) 0px,
         rgba(0,0,0,0.08) 2px,
         transparent 2px,
-        transparent 4px
-      );
-      z-index: 999;
+        transparent 4px);
+      z-index:999;
     }
 
     /* Windows */
     .window {
-      position: absolute;
-      width: 420px;
-      background: #c0c0c0;
-      border: 2px solid black;
-      display: none;
-      box-shadow: 4px 4px 0 #000;
+      position:absolute;
+      width:420px;
+      background:#c0c0c0;
+      border:2px solid black;
+      display:none;
+      box-shadow:4px 4px 0 #000;
     }
     .titlebar {
-      background: linear-gradient(to right, #000080, #1084d0);
-      color: white;
-      padding: 4px;
-      font-size: 14px;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
+      background:linear-gradient(to right,#000080,#1084d0);
+      color:white;
+      padding:4px;
+      font-size:14px;
+      cursor:move;
+      display:flex;
+      justify-content:space-between;
     }
-    .content {padding: 15px; font-size: 14px;}
-
+    .content {padding:15px;font-size:14px;}
+    
     /* Desktop */
     .desktop {
-      display: flex;
-      flex-direction: column;
-      width: 100px;
-      padding: 10px;
-      position: absolute;
-      top: 10px;
-      left: 10px;
+      display:flex;
+      flex-direction:column;
+      width:100px;
+      padding:10px;
+      position:absolute;
+      top:10px;
+      left:10px;
     }
     .icon {
-      width: 80px;
-      text-align: center;
-      color: white;
-      cursor: pointer;
-      margin: 15px 0;
+      width:80px;
+      text-align:center;
+      color:white;
+      cursor:pointer;
+      margin:15px 0;
     }
-    .icon img {width: 48px; image-rendering: pixelated;}
+    .icon img {width:48px; image-rendering: pixelated;}
     .icon:hover {opacity:0.8;}
 
-    /* Files inside docs */
-    .file {
-      width: 90px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 12px;
+    /* My Documents files */
+    #docsContent {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,90px);
+      gap:15px;
     }
-    .file img {display:block; margin:auto; image-rendering: pixelated;}
+    .file {
+      text-align:center;
+      cursor:pointer;
+      font-size:12px;
+    }
+    .file img {display:block;margin:auto;width:60px; image-rendering:pixelated;}
     .file:hover {background: rgba(255,255,255,0.2);}
 
     /* Taskbar */
     .taskbar {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 40px;
-      background: #c0c0c0;
-      border-top: 2px solid #000;
-      display: flex;
-      align-items: center;
+      position:fixed;
+      bottom:0;
+      width:100%;
+      height:40px;
+      background:#c0c0c0;
+      border-top:2px solid #000;
+      display:flex;
+      align-items:center;
     }
-    .start {background: #c0c0c0; border: 2px solid black; margin:5px; padding:5px 10px; font-weight:bold; cursor:pointer;}
-    .clock {margin-left:auto; margin-right:10px; cursor:pointer;}
+    .start {background:#c0c0c0;border:2px solid black;margin:5px;padding:5px 10px;font-weight:bold;cursor:pointer;}
+    .clock {margin-left:auto;margin-right:10px;cursor:pointer;}
 
     /* Secret Page */
     #secretPage {
-      position: fixed;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: #0f0;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Courier New', monospace;
-      text-align: center;
-      z-index: 20000;
-      flex-direction: column;
+      position:fixed;
+      width:100%;
+      height:100%;
+      background:black;
+      color:#0f0;
+      display:none;
+      justify-content:center;
+      align-items:center;
+      font-family:'Courier New',monospace;
+      text-align:center;
+      z-index:20000;
+      flex-direction:column;
     }
-
-    /* Invisible zone */
-    #invisibleZone {
-      position: fixed;
-      bottom: 60px;
-      right: 20px;
-      width: 40px;
-      height: 40px;
+    #secretPage input {
+      margin-top:20px;
+      background:black;
+      color:#0f0;
+      border:1px solid #0f0;
+      padding:5px;
     }
-
   </style>
 </head>
 <body>
@@ -127,18 +127,13 @@
 <!-- Desktop Icons -->
 <div class="desktop">
   <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
-    <img src="computer.png">
-    <div>My Computer</div>
+    <img src="computer.png"><div>My Computer</div>
   </div>
-
   <div class="icon" onclick="openWindow('docsWindow')">
-    <img src="folder.png">
-    <div>My Documents</div>
+    <img src="folder.png"><div>My Documents</div>
   </div>
-
-  <div class="icon" id="iconShed" onclick="openWindow('musicWindow')">
-    <img src="music.png">
-    <div>Music Player</div>
+  <div class="icon" id="iconMusic" onclick="openWindow('musicWindow')">
+    <img src="music.png"><div>Music Player</div>
   </div>
 </div>
 
@@ -146,10 +141,7 @@
 
 <!-- System Popup -->
 <div class="window" id="popup">
-  <div class="titlebar">
-    System
-    <div><button onclick="closeWindow('popup')">X</button></div>
-  </div>
+  <div class="titlebar">System<div><button onclick="closeWindow('popup')">X</button></div></div>
   <div class="content">
     <p>Welcome to my digital room.</p>
     <p>Status: online</p>
@@ -158,51 +150,27 @@
 
 <!-- My Documents -->
 <div class="window" id="docsWindow">
-  <div class="titlebar">
-    My Documents
-    <div><button onclick="closeWindow('docsWindow')">X</button></div>
-  </div>
-  <div class="content" id="docsContent" style="display:flex; flex-wrap:wrap; gap:20px;">
-    <div class="file" onclick="openFile('photo1')">
-      <img src="photo1.jpg" width="60">
-      <div>mall_photo.jpg</div>
-    </div>
-    <div class="file" onclick="openFile('gif1')">
-      <img src="glitter.gif" width="60">
-      <div>cool.gif</div>
-    </div>
-    <div class="file" onclick="openFile('note1')">
-      <img src="texticon.png" width="60">
-      <div>note.txt</div>
-    </div>
-    <div class="file" onclick="openFile('songmemory')">
-      <img src="burnedcd.jpg" width="60">
-      <div>burned_cd.png</div>
-    </div>
-    <div class="file" onclick="openFile('secretFile')">
-      <img src="unknown.png" width="60">
-      <div>do_not_open.jpg</div>
-    </div>
+  <div class="titlebar">My Documents<div><button onclick="closeWindow('docsWindow')">X</button></div></div>
+  <div class="content" id="docsContent">
+    <div class="file" onclick="openFile('photo1')"><img src="photo1.jpg"><div>mall_photo.jpg</div></div>
+    <div class="file" onclick="openFile('gif1')"><img src="glitter.gif"><div>cool.gif</div></div>
+    <div class="file" onclick="openFile('note1')"><img src="texticon.png"><div>note.txt</div></div>
+    <div class="file" onclick="openFile('songmemory')"><img src="burnedcd.jpg"><div>burned_cd.png</div></div>
+    <div class="file" onclick="openFile('secretFile')"><img src="unknown.png"><div>do_not_open.jpg</div></div>
   </div>
 </div>
 
 <!-- File Viewer -->
 <div class="window" id="fileViewer">
-  <div class="titlebar">
-    Viewer
-    <div><button onclick="closeWindow('fileViewer')">X</button></div>
-  </div>
+  <div class="titlebar">Viewer<div><button onclick="closeWindow('fileViewer')">X</button></div></div>
   <div class="content" id="fileContent"></div>
 </div>
 
 <!-- Music Player -->
 <div class="window" id="musicWindow">
-  <div class="titlebar">
-    Music Player
-    <div><button onclick="closeWindow('musicWindow')">X</button></div>
-  </div>
-  <div class="content" style="display:flex; flex-direction:column; align-items:center;">
-    <p id="currentTrack" style="font-weight:bold; margin-bottom:10px;">Track: None</p>
+  <div class="titlebar">Music Player<div><button onclick="closeWindow('musicWindow')">X</button></div></div>
+  <div class="content" style="display:flex;flex-direction:column;align-items:center;">
+    <p id="currentTrack" style="font-weight:bold;margin-bottom:10px;">Track: None</p>
     <audio id="audioPlayer" controls style="width:90%;"></audio>
     <div style="margin-top:10px;">
       <button onclick="prevTrack()">⏮️</button>
@@ -215,8 +183,7 @@
 <!-- Secret Page -->
 <div id="secretPage">
   <p id="secretText">You're not supposed to be here yet.</p>
-  <input id="secretInput" type="text"
-         style="margin-top:20px; background:black; color:#0f0; border:1px solid #0f0; padding:5px;">
+  <input id="secretInput" type="text" placeholder="Type secret here">
 </div>
 
 <!-- Taskbar -->
@@ -226,74 +193,40 @@
 </div>
 
 <div class="scanlines"></div>
-<div id="invisibleZone"></div>
 
 <script>
 // --- Z-index ---
-let zIndexCounter = 1;
+let zIndexCounter=1;
 
 // --- Boot ---
-window.addEventListener('load', ()=>{
-  setTimeout(()=>{
-    document.getElementById('bootScreen').style.display = "none";
-  }, 3000);
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('bootScreen').style.display="none",3000);
 });
 
 // --- Open/Close Windows ---
 function openWindow(id){
-  const win = document.getElementById(id);
-  win.style.display = "block";
-  win.style.zIndex = zIndexCounter++;
+  const win=document.getElementById(id);
+  win.style.display="block";
+  win.style.zIndex=zIndexCounter++;
 }
-function closeWindow(id){
-  document.getElementById(id).style.display = "none";
-}
+function closeWindow(id){document.getElementById(id).style.display="none";}
 
 // --- Clock ---
 function updateClock(){
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.getHours() + ":" + String(now.getMinutes()).padStart(2,'0');
+  const now=new Date();
+  document.getElementById("clock").innerText=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
 }
-setInterval(updateClock,1000);
-updateClock();
-
-// --- Clock secret opens "away message" ---
-document.getElementById("clock").addEventListener("click", ()=>{
-  alert("brb... walking to the gas station."); // simple nostalgia message
-});
-
-// --- Invisible zone secret ---
-document.getElementById("invisibleZone").addEventListener("click", ()=>{
-  openWindow("secretPage");
-  document.getElementById("secretText").innerText = "you used to sit here after school.";
-});
-
-// --- Secret input ---
-document.getElementById("secretInput").addEventListener("keydown", function(e){
-  if(e.key === "Enter"){
-    if(this.value.toLowerCase() === "wake_up"){
-      window.location.href = "void.html"; // make sure this file exists
-    } else {
-      this.value="";
-      this.placeholder="incorrect.";
-    }
-  }
-});
+setInterval(updateClock,1000); updateClock();
 
 // --- Music Player ---
-const playlist = [
-  {name: "Song One", src: "song1.mp3"},
-  {name: "Song Two", src: "song2.mp3"},
-  {name: "Song Three", src: "song3.mp3"}
-];
-let currentTrackIndex = 0;
-const audio = document.getElementById("audioPlayer");
-const trackLabel = document.getElementById("currentTrack");
+const playlist=[{name:"Song One",src:"song1.mp3"},{name:"Song Two",src:"song2.mp3"},{name:"Song Three",src:"song3.mp3"}];
+let currentTrackIndex=0;
+const audio=document.getElementById("audioPlayer");
+const trackLabel=document.getElementById("currentTrack");
 
 function loadTrack(index){
-  if(index<0) index=playlist.length-1;
-  if(index>=playlist.length) index=0;
+  if(index<0)index=playlist.length-1;
+  if(index>=playlist.length)index=0;
   currentTrackIndex=index;
   audio.src=playlist[currentTrackIndex].src;
   trackLabel.innerText="Track: "+playlist[currentTrackIndex].name;
@@ -301,373 +234,56 @@ function loadTrack(index){
 }
 function nextTrack(){loadTrack(currentTrackIndex+1);}
 function prevTrack(){loadTrack(currentTrackIndex-1);}
-function playPause(){if(audio.paused) audio.play(); else audio.pause();}
-audio.addEventListener('ended', nextTrack);
+function playPause(){if(audio.paused)audio.play();else audio.pause();}
+audio.addEventListener('ended',nextTrack);
 loadTrack(0);
 
 // --- Docs files ---
 function openFile(type){
-  const viewer = document.getElementById("fileViewer");
-  const content = document.getElementById("fileContent");
+  const viewer=document.getElementById("fileViewer");
+  const content=document.getElementById("fileContent");
   openWindow("fileViewer");
 
-  if(type === "photo1"){
-    content.innerHTML = `<img src="photo1.jpg" style="max-width:100%;"><p style="opacity:0.6;">taken on mom's digital camera</p>`;
-  }
-  if(type === "gif1"){
-    content.innerHTML = `<img src="glitter.gif"><p>made this on glitter-graphics.com</p>`;
-  }
-  if(type === "note1"){
-    content.innerHTML = `<pre>i think this was summer 2008\n\ni dont remember why we stopped talking\nbut i remember the mall smelled like pretzels</pre>`;
-  }
-  if(type === "songmemory"){
-    content.innerHTML = `<img src="burnedcd.jpg" style="max-width:100%;"><p>Track 7 always made me feel weird.</p>`;
-  }
-  if(type === "secretFile"){
-    content.innerHTML = `<img src="corrupted.jpg" style="max-width:100%;"><p style="color:red;">file corrupted.</p>`;
+  if(type==="photo1") content.innerHTML=`<img src="photo1.jpg" style="max-width:100%;"><p style="opacity:0.6;">taken on mom's digital camera</p>`;
+  if(type==="gif1") content.innerHTML=`<img src="glitter.gif"><p>made this on glitter-graphics.com</p>`;
+  if(type==="note1") content.innerHTML=`<pre>i think this was summer 2008\n\ni dont remember why we stopped talking\nbut i remember the mall smelled like pretzels</pre>`;
+  if(type==="songmemory") content.innerHTML=`<img src="burnedcd.jpg" style="max-width:100%;"><p>Track 7 always made me feel weird.</p>`;
+  if(type==="secretFile"){
+    content.innerHTML=`<img src="corrupted.jpg" style="max-width:100%;"><p style="color:red;">file corrupted.</p>`;
     setTimeout(()=>{
       openWindow("secretPage");
-      document.getElementById("secretText").innerText = "you weren't supposed to open that.";
+      document.getElementById("secretText").innerText="you weren't supposed to open that.";
     },2000);
   }
 }
 
+// --- Secret input ---
+document.getElementById("secretInput").addEventListener("keydown",function(e){
+  if(e.key==="Enter"){
+    if(this.value.toLowerCase()==="wake_up") window.location.href="void.html";
+    else {this.value="";this.placeholder="incorrect.";}
+  }
+});
+
 // --- Shutdown ---
 function shutdown(){
-  document.body.innerHTML = "<div style='background:black;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Tahoma;'>It is now safe to turn off your computer.</div>";
-}
-</script>
-</body>
-</html><!DOCTYPE html>
-<html>
-<head>
-<title>ash_desktop</title>
-
-<style>
-body {
-  margin: 0;
-  font-family: "Tahoma", sans-serif;
-  overflow: hidden;
-  background: url('bliss.jpg') no-repeat center center fixed;
-  background-size: cover;
+  document.body.innerHTML="<div style='background:black;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Tahoma;'>It is now safe to turn off your computer.</div>";
 }
 
-/* CRT Scanlines */
-.scanlines {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0,0,0,0.08) 0px,
-    rgba(0,0,0,0.08) 2px,
-    transparent 2px,
-    transparent 4px
-  );
-  z-index: 999;
-}
-
-/* Desktop */
-.desktop {
-  display: flex;
-  flex-direction: column;
-  width: 100px;
-  padding: 10px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
-}
-
-.icon {
-  width: 80px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-  margin: 15px 0;
-}
-
-.icon img {
-  width: 48px;
-  image-rendering: pixelated;
-}
-
-/* Windows */
-.window {
-  position: absolute;
-  width: 420px;
-  background: #c0c0c0;
-  border: 2px solid black;
-  display: none;
-  box-shadow: 4px 4px 0 #000;
-}
-
-.titlebar {
-  background: linear-gradient(to right, #000080, #1084d0);
-  color: white;
-  padding: 4px;
-  font-size: 14px;
-  cursor: move;
-  display: flex;
-  justify-content: space-between;
-}
-
-.content {
-  padding: 15px;
-  font-size: 14px;
-}
-
-/* Taskbar */
-.taskbar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  height: 40px;
-  background: #c0c0c0;
-  border-top: 2px solid #000;
-  display: flex;
-  align-items: center;
-}
-
-.start {
-  background: #c0c0c0;
-  border: 2px solid black;
-  margin: 5px;
-  padding: 5px 10px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.clock {
-  margin-left: auto;
-  margin-right: 10px;
-  cursor: pointer;
-}
-
-/* Secret Page */
-#secretPage {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: black;
-  color: #0f0;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  font-family: 'Courier New', monospace;
-  text-align: center;
-  z-index: 20000;
-  flex-direction: column;
-}
-
-/* Invisible memory zone */
-#invisibleZone {
-  position: fixed;
-  bottom: 60px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-}
-
-</style>
-</head>
-<body>
-
-<!-- Boot -->
-<div id="bootScreen">
-  <p>Starting Windows 98...</p>
-</div>
-
-<!-- Desktop Icons -->
-<div class="desktop">
-
-  <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
-    <img src="computer.png">
-    <div>My Computer</div>
-  </div>
-
-  <div class="icon" onclick="openWindow('docsWindow')">
-    <img src="folder.png">
-    <div>My Documents</div>
-  </div>
-
-  <div class="icon" id="iconShed" onclick="openWindow('shedAlbum')">
-    <img src="music.png">
-    <div>Shed Album</div>
-  </div>
-
-</div>
-
-<!-- System Window -->
-<div class="window" id="popup">
-  <div class="titlebar">
-    System
-    <div>
-      <button onclick="closeWindow('popup')">X</button>
-    </div>
-  </div>
-  <div class="content">
-    <p>Welcome to my digital room.</p>
-    <p>Status: online</p>
-  </div>
-</div>
-
-<!-- Documents -->
-<div class="window" id="docsWindow">
-  <div class="titlebar">
-    My Documents
-    <div>
-      <button onclick="closeWindow('docsWindow')">X</button>
-    </div>
-  </div>
-  <div class="content">
-    <p>Nothing to see here... yet.</p>
-    <img id="missingPhoto" src="missing.png" style="width:120px; margin-top:10px;">
-  </div>
-</div>
-
-<!-- Away Message -->
-<div class="window" id="awayWindow">
-  <div class="titlebar">
-    away_message.txt
-    <div>
-      <button onclick="closeWindow('awayWindow')">X</button>
-    </div>
-  </div>
-  <div class="content" style="font-family: 'Courier New', monospace;">
-    <p>brb</p>
-    <p>walking to the gas station</p>
-    <p>dont call the house phone</p>
-    <br>
-    <p style="opacity:0.5;">last updated: 2007</p>
-  </div>
-</div>
-
-<!-- Shed Album -->
-<div class="window" id="shedAlbum">
-  <div class="titlebar">
-    Shed
-    <div>
-      <button onclick="closeWindow('shedAlbum')">X</button>
-    </div>
-  </div>
-  <div class="content">
-    <p>Safe in Your Skin</p>
-    <audio id="shedPlayer" controls src="shed01.mp3"></audio>
-  </div>
-</div>
-
-<!-- Secret Page -->
-<div id="secretPage">
-  <p id="secretText">You're not supposed to be here yet.</p>
-  <p style="opacity:0.6;">type: wake_up</p>
-  <input id="secretInput" type="text"
-    style="margin-top:20px; background:black; color:#0f0; border:1px solid #0f0; padding:5px;">
-</div>
-
-<!-- Taskbar -->
-<div class="taskbar">
-  <div class="start" onclick="shutdown()">Shut Down</div>
-  <div class="clock" id="clock"></div>
-</div>
-
-<div class="scanlines"></div>
-<div id="invisibleZone"></div>
-
-<script>
-
-let zIndexCounter = 1;
-
-/* Boot */
-window.addEventListener('load', ()=>{
-  setTimeout(()=>{
-    document.getElementById('bootScreen').style.display = "none";
-
-    if(Math.random() > 0.5){
-      openWindow("popup");
-      document.querySelector("#popup .content").innerHTML =
-        "<p>you left this open last time.</p><p style='opacity:0.6;'>welcome back.</p>";
-    }
-
-  }, 3000);
-});
-
-/* Window control */
-function openWindow(id){
-  const win = document.getElementById(id);
-  win.style.display = "block";
-  win.style.zIndex = zIndexCounter++;
-}
-function closeWindow(id){
-  document.getElementById(id).style.display = "none";
-}
-
-/* Clock */
-function updateClock(){
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.getHours() + ":" + String(now.getMinutes()).padStart(2,'0');
-}
-setInterval(updateClock,1000);
-updateClock();
-
-/* Clock secret */
-document.getElementById("clock").addEventListener("click", ()=>{
-  openWindow("awayWindow");
-});
-
-/* Broken image memory */
-document.getElementById("missingPhoto").addEventListener("click", ()=>{
-  document.getElementById("secretPage").style.display = "flex";
-  document.getElementById("secretText").innerText =
-    "this photo doesn't load anymore.";
-});
-
-/* Invisible zone memory */
-document.getElementById("invisibleZone").addEventListener("click", ()=>{
-  document.getElementById("secretPage").style.display = "flex";
-  document.getElementById("secretText").innerText =
-    "you used to sit here after school.";
-});
-
-/* Secret combo */
-const secretSequence = ["iconShed","iconMyComputer"];
-let clickSequence = [];
-
-function registerClick(id){
-  clickSequence.push(id);
-  if(clickSequence.length > secretSequence.length){
-    clickSequence.shift();
-  }
-  if(JSON.stringify(clickSequence) === JSON.stringify(secretSequence)){
-    document.getElementById("secretPage").style.display = "flex";
-  }
-}
-
-["iconShed","iconMyComputer"].forEach(id=>{
-  const icon = document.getElementById(id);
-  const oldClick = icon.onclick;
-  icon.onclick = ()=>{ registerClick(id); oldClick(); };
-});
-
-/* Secret input */
-document.getElementById("secretInput").addEventListener("keydown", function(e){
-  if(e.key === "Enter"){
-    if(this.value.toLowerCase() === "wake_up"){
-      window.location.href = "void.html";
-    } else {
-      this.value="";
-      this.placeholder="incorrect.";
-    }
+// --- Draggable windows ---
+let dragTarget=null,offsetX=0,offsetY=0;
+document.addEventListener('mousedown',e=>{
+  if(e.target.closest('.titlebar')){
+    dragTarget=e.target.closest('.window');
+    offsetX=e.clientX-dragTarget.offsetLeft;
+    offsetY=e.clientY-dragTarget.offsetTop;
+    dragTarget.style.zIndex=zIndexCounter++;
   }
 });
-
-/* Shutdown */
-function shutdown(){
-  document.body.innerHTML =
-    "<div style='background:black;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Tahoma;'>It is now safe to turn off your computer.</div>";
-}
-
+document.addEventListener('mousemove',e=>{
+  if(dragTarget){dragTarget.style.left=(e.clientX-offsetX)+'px';dragTarget.style.top=(e.clientY-offsetY)+'px';}
+});
+document.addEventListener('mouseup',()=>{dragTarget=null;});
 </script>
 </body>
 </html>
