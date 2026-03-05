@@ -115,9 +115,23 @@
       border:1px solid #0f0;
       padding:5px;
     }
+
+    /* Glitchy mini windows */
+    .glitchWindow {
+      background:#111;
+      color:#0f0;
+      border:2px solid #0f0;
+      font-family:"Courier New",monospace;
+      text-align:center;
+    }
   </style>
 </head>
 <body>
+
+<!-- Boot Screen -->
+<div id="bootScreen">
+  <p>Starting Windows 98...</p>
+</div>
 
 <!-- Desktop Icons -->
 <div class="desktop">
@@ -138,8 +152,8 @@
 <div class="window" id="popup">
   <div class="titlebar">System<div><button onclick="closeWindow('popup')">X</button></div></div>
   <div class="content">
-    <p> Why are you here? </p>
-    <p>Status: still trying. </p>
+    <p>Welcome to my digital room.</p>
+    <p>Status: online</p>
   </div>
 </div>
 
@@ -152,6 +166,9 @@
     <div class="file" onclick="openFile('note1')"><img src="texticon.png"><div>note.txt</div></div>
     <div class="file" onclick="openFile('songmemory')"><img src="burnedcd.jpg"><div>burned_cd.png</div></div>
     <div class="file" onclick="openFile('secretFile')"><img src="unknown.png"><div>do_not_open.jpg</div></div>
+    <div class="file" onclick="openFile('oldChat1')"><img src="chaticon.png"><div>chat1.txt</div></div>
+    <div class="file" onclick="openFile('glitch1')"><img src="glitch.png"><div>glitch.gif</div></div>
+    <div class="file" onclick="changeBackground('bliss2.jpg')"><img src="bliss2_thumb.jpg"><div>bliss2.jpg</div></div>
   </div>
 </div>
 
@@ -250,6 +267,13 @@ function openFile(type){
       document.getElementById("secretText").innerText="you weren't supposed to open that.";
     },2000);
   }
+  if(type==="oldChat1") content.innerHTML=`<pre>[07/14/2009] Ash: hey, remember the mall?\n[07/14/2009] Friend: omg yeah i do...</pre>`;
+  if(type==="glitch1"){
+    content.innerHTML=`<img src="glitch.gif" style="width:100%;"><p>system instability...</p>`;
+    // optional flicker effect
+    let flicker = setInterval(()=>{viewer.style.opacity=Math.random();},100);
+    setTimeout(()=>{clearInterval(flicker); viewer.style.opacity=1;},5000);
+  }
 }
 
 // --- Secret input ---
@@ -259,6 +283,12 @@ document.getElementById("secretInput").addEventListener("keydown",function(e){
     else {this.value="";this.placeholder="incorrect.";}
   }
 });
+
+// --- Background change ---
+function changeBackground(img){
+  document.body.style.background = `url('${img}') no-repeat center center fixed`;
+  document.body.style.backgroundSize = 'cover';
+}
 
 // --- Shutdown ---
 function shutdown(){
@@ -280,5 +310,6 @@ document.addEventListener('mousemove',e=>{
 });
 document.addEventListener('mouseup',()=>{dragTarget=null;});
 </script>
+
 </body>
 </html>
