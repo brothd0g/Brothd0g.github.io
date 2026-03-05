@@ -14,7 +14,7 @@
       align-items:center;
       flex-direction:column;
       height:100vh;
-      cursor: none;
+      cursor:none;
     }
     #voidText {
       font-size:32px;
@@ -29,13 +29,25 @@
       user-select:none;
       pointer-events:none;
     }
-    #secretInput {
+    #chatWindow {
+      width:400px;
+      height:250px;
+      overflow-y:auto;
+      background:black;
+      color:#0f0;
+      border:1px solid #0f0;
+      padding:10px;
+      font-family:'Courier New', monospace;
       margin-top:20px;
+    }
+    #chatInput {
+      width:400px;
       background:black;
       color:#0f0;
       border:1px solid #0f0;
       padding:5px;
       font-family:'Courier New', monospace;
+      margin-top:5px;
     }
     .flash {
       position:fixed;
@@ -50,43 +62,48 @@
 <body>
 
 <div id="voidText">YOU SHOULD NOT BE HERE</div>
-<input id="secretInput" type="text" placeholder="type anything...">
+
+<div id="chatWindow"></div>
+<input id="chatInput" type="text" placeholder="type a message...">
 <div class="flash" id="flashScreen"></div>
 
 <audio id="glitchAudio" src="glitch_hum.mp3" autoplay loop></audio>
 <audio id="beepAudio" src="beep.wav"></audio>
+<audio id="secretAudio" src="secret_sound.mp3"></audio>
 
 <script>
 const voidText = document.getElementById('voidText');
 const flashScreen = document.getElementById('flashScreen');
-const secretInput = document.getElementById('secretInput');
+const chatWindow = document.getElementById('chatWindow');
+const chatInput = document.getElementById('chatInput');
 const beepAudio = document.getElementById('beepAudio');
+const secretAudio = document.getElementById('secretAudio');
 
-// --- Glitch cursor ---
+// --- Random cursor ---
 let cursorVisible = true;
 setInterval(()=>{
   cursorVisible = !cursorVisible;
-  document.body.style.cursor = cursorVisible ? 'block' : 'text';
+  document.body.style.cursor = cursorVisible ? 'block':'text';
 }, 400 + Math.random()*400);
 
 // --- Blackout flashes ---
 setInterval(()=>{
-  if(Math.random() < 0.08){
+  if(Math.random()<0.08){
     flashScreen.style.display='block';
     setTimeout(()=>flashScreen.style.display='none',100);
   }
 },200);
 
-// --- Random beeps / static ---
+// --- Random beeps ---
 setInterval(()=>{
-  if(Math.random() < 0.1) beepAudio.play();
-}, 700);
+  if(Math.random()<0.1) beepAudio.play();
+},700);
 
 // --- Floating corrupted letters ---
 setInterval(()=>{
   const glitch = document.createElement('div');
   glitch.className='glitch';
-  glitch.innerText = String.fromCharCode(33+Math.floor(Math.random()*94));
+  glitch.innerText = String.fromCharCode(33 + Math.floor(Math.random()*94));
   glitch.style.top = Math.random()*window.innerHeight+'px';
   glitch.style.left = Math.random()*window.innerWidth+'px';
   glitch.style.fontSize = 20 + Math.random()*30 + 'px';
@@ -94,7 +111,7 @@ setInterval(()=>{
   setTimeout(()=>glitch.remove(),1500);
 },100);
 
-// --- Stack floating letters into numbers / shapes ---
+// --- Stack numbers / shapes ---
 function stackShape(str,x,y,color="#0f0"){
   for(let i=0;i<str.length;i++){
     const g=document.createElement('div');
@@ -113,28 +130,61 @@ setInterval(()=>{
   }
 },1500);
 
-// --- Text flicker ---
+// --- Flicker main text ---
 setInterval(()=>{
   voidText.style.color = Math.random()>0.5?'#0f0':'#0ff';
   voidText.style.transform = `translate(${Math.random()*6-3}px,${Math.random()*6-3}px)`;
 },100);
 
-// --- Secret input handling ---
-secretInput.addEventListener('keydown', e=>{
+// --- Chatbot ---
+const responses = {
+  hello: "Hello...how did you find me?",
+  wake up: "im up bruh",
+  help: "There is no help here. Only questions.",
+  reveal: "A hidden wallpaper appears...",
+  glitch: "You feel the void glitch around you.",
+  default: "I do not understand..."
+};
+
+chatInput.addEventListener('keydown', e=>{
   if(e.key==='Enter'){
-    const val = e.target.value.toLowerCase();
-    if(val==='awake'){
-      alert("The void stirs...");
-      e.target.value='';
-    } else if(val==='look'){
-      alert("You see something flickering in the corner of your eye...");
-      e.target.value='';
-    } else {
-      e.target.value='';
-      e.target.placeholder='Nothing happens.';
+    const message = e.target.value.trim();
+    if(!message) return;
+    chatWindow.innerHTML += `<p style="color:#0ff;">> ${message}</p>`;
+
+    let reply = responses.default;
+    for(let key in responses){
+      if(message.toLowerCase().includes(key)){
+        reply = responses[key];
+        break;
+      }
+    }
+
+    chatWindow.innerHTML += `<p>${reply}</p>`;
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    e.target.value='';
+
+    // Special effects for some commands
+    if(message.toLowerCase().includes('reveal')){
+      document.body.style.background = 'url("bliss2.jpg") no-repeat center center fixed';
+      document.body.style.backgroundSize = 'cover';
+      secretAudio.play();
+    }
+    if(message.toLowerCase().includes('glitch')){
+      for(let i=0;i<20;i++){
+        const g=document.createElement('div');
+        g.className='glitch';
+        g.innerText=String.fromCharCode(33+Math.floor(Math.random()*94));
+        g.style.top=Math.random()*window.innerHeight+'px';
+        g.style.left=Math.random()*window.innerWidth+'px';
+        g.style.fontSize=15+Math.random()*25+'px';
+        document.body.appendChild(g);
+        setTimeout(()=>g.remove(),3000);
+      }
     }
   }
 });
 </script>
+
 </body>
 </html>
