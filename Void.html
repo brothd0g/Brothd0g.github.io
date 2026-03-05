@@ -1,49 +1,140 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>void</title>
-<style>
-body {
-  margin:0;
-  background:black;
-  color:#0f0;
-  font-family: "Courier New", monospace;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-  overflow:hidden;
-}
-
-#text {
-  font-size:24px;
-  text-align:center;
-  animation: flicker 0.1s infinite alternate;
-}
-
-@keyframes flicker {
-  from { opacity:0.8; }
-  to { opacity:1; }
-}
-</style>
+  <title>The Void</title>
+  <style>
+    body {
+      margin:0;
+      background:black;
+      color:#0f0;
+      font-family:'Courier New', monospace;
+      overflow:hidden;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      height:100vh;
+      cursor: none;
+    }
+    #voidText {
+      font-size:32px;
+      text-align:center;
+      position:relative;
+      z-index:1;
+    }
+    .glitch {
+      position:absolute;
+      color:#0ff;
+      font-size:32px;
+      user-select:none;
+      pointer-events:none;
+    }
+    #secretInput {
+      margin-top:20px;
+      background:black;
+      color:#0f0;
+      border:1px solid #0f0;
+      padding:5px;
+      font-family:'Courier New', monospace;
+    }
+    .flash {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:white;
+      z-index:9999;
+      display:none;
+    }
+  </style>
 </head>
 <body>
 
-<div id="text">
-  connection established.<br><br>
-  you opened the door.
-</div>
+<div id="voidText">YOU SHOULD NOT BE HERE</div>
+<input id="secretInput" type="text" placeholder="type anything...">
+<div class="flash" id="flashScreen"></div>
+
+<audio id="glitchAudio" src="glitch_hum.mp3" autoplay loop></audio>
+<audio id="beepAudio" src="beep.wav"></audio>
 
 <script>
-setTimeout(()=>{
-  document.getElementById("text").innerHTML =
-    "there is no desktop.<br><br>only layers.";
-},5000);
+const voidText = document.getElementById('voidText');
+const flashScreen = document.getElementById('flashScreen');
+const secretInput = document.getElementById('secretInput');
+const beepAudio = document.getElementById('beepAudio');
 
-setTimeout(()=>{
-  window.location.href = "index.html";
-},10000);
+// --- Glitch cursor ---
+let cursorVisible = true;
+setInterval(()=>{
+  cursorVisible = !cursorVisible;
+  document.body.style.cursor = cursorVisible ? 'block' : 'text';
+}, 400 + Math.random()*400);
+
+// --- Blackout flashes ---
+setInterval(()=>{
+  if(Math.random() < 0.08){
+    flashScreen.style.display='block';
+    setTimeout(()=>flashScreen.style.display='none',100);
+  }
+},200);
+
+// --- Random beeps / static ---
+setInterval(()=>{
+  if(Math.random() < 0.1) beepAudio.play();
+}, 700);
+
+// --- Floating corrupted letters ---
+setInterval(()=>{
+  const glitch = document.createElement('div');
+  glitch.className='glitch';
+  glitch.innerText = String.fromCharCode(33+Math.floor(Math.random()*94));
+  glitch.style.top = Math.random()*window.innerHeight+'px';
+  glitch.style.left = Math.random()*window.innerWidth+'px';
+  glitch.style.fontSize = 20 + Math.random()*30 + 'px';
+  document.body.appendChild(glitch);
+  setTimeout(()=>glitch.remove(),1500);
+},100);
+
+// --- Stack floating letters into numbers / shapes ---
+function stackShape(str,x,y,color="#0f0"){
+  for(let i=0;i<str.length;i++){
+    const g=document.createElement('div');
+    g.className='glitch';
+    g.innerText=str[i];
+    g.style.top = y + i*20 + 'px';
+    g.style.left = x + 'px';
+    g.style.color = color;
+    document.body.appendChild(g);
+    setTimeout(()=>g.remove(),5000);
+  }
+}
+setInterval(()=>{
+  if(Math.random()<0.05){
+    stackShape(Math.floor(Math.random()*1000).toString(), Math.random()*window.innerWidth, Math.random()*window.innerHeight);
+  }
+},1500);
+
+// --- Text flicker ---
+setInterval(()=>{
+  voidText.style.color = Math.random()>0.5?'#0f0':'#0ff';
+  voidText.style.transform = `translate(${Math.random()*6-3}px,${Math.random()*6-3}px)`;
+},100);
+
+// --- Secret input handling ---
+secretInput.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    const val = e.target.value.toLowerCase();
+    if(val==='awake'){
+      alert("The void stirs...");
+      e.target.value='';
+    } else if(val==='look'){
+      alert("You see something flickering in the corner of your eye...");
+      e.target.value='';
+    } else {
+      e.target.value='';
+      e.target.placeholder='Nothing happens.';
+    }
+  }
+});
 </script>
-
 </body>
 </html>
