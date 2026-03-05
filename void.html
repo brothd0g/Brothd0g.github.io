@@ -138,7 +138,6 @@ setInterval(()=>{
 
 // --- Chatbot ---
 const responses = {
- const responses = {
   hello: "Hello, wanderer... How did you find me?",
   wake: "im up bruh...",
   help: "There is no help here. Only questions.",
@@ -162,11 +161,9 @@ const responses = {
   Blue: "8/10",
   Purple: "Take the amplified and the reversal. And smash together those two different infinities to create imaginary mass. Imaginary Technique: Hollow Purple.",
   pulluphoe: "your total is 17.86. 'okay thank you' OKAY PULL UP HOE",
-   jackie: "they call me brick",
-   Secret: "i like feet",
-   Feet: "ew what the fuck i hate feet"
-};
-  
+  jackie: "they call me brick",
+  Secret: "i like feet",
+  Feet: "ew what the fuck i hate feet"
 };
 
 chatInput.addEventListener('keydown', e=>{
@@ -177,7 +174,7 @@ chatInput.addEventListener('keydown', e=>{
 
     let reply = responses.default;
     for(let key in responses){
-      if(message.toLowerCase().includes(key)){
+      if(message.toLowerCase().includes(key.toLowerCase())){
         reply = responses[key];
         break;
       }
@@ -206,7 +203,6 @@ chatInput.addEventListener('keydown', e=>{
       }
     }
     if(message.toLowerCase().includes('chatlog')){
-      // Display old chat log images
       const img1 = document.createElement('img');
       img1.src = 'chat1.png';
       img1.className = 'chatImage';
