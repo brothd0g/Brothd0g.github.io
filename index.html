@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+fr<!DOCTYPE html>
 <html>
 <head>
 <title>ash_desktop</title>
@@ -193,22 +193,22 @@ z-index:5000;
 
 <div class="icon" onclick="openWindow('popup')">
 <img src="computer.png">
-<div>My Computer</div>
+<div>OK Computer</div>
 </div>
 
 <div class="icon" onclick="openWindow('docsWindow')">
 <img src="folder.png">
-<div>My Documents</div>
+<div> Documents</div>
 </div>
 
 <div class="icon" onclick="openWindow('musicWindow')">
 <img src="music.png">
-<div>Music Player</div>
+<div>Music </div>
 </div>
 
 <div class="icon" onclick="openWindow('crossyWindow')">
 <img src="game.png">
-<div>Frogger.exe</div>
+<div>Crossy Road 2.0</div>
 </div>
 
 </div>
@@ -218,7 +218,7 @@ z-index:5000;
 <div class="window" id="popup">
 <div class="titlebar">System<div><button onclick="closeWindow('popup')">X</button></div></div>
 <div class="content">
-<p>Welcome to my digital room.</p>
+<p>get out of my damn computer</p>
 <p>Status: online</p>
 </div>
 </div>
@@ -367,9 +367,9 @@ updateClock();
 /* MUSIC */
 
 const playlist=[
-{name:"Song One",src:"song1.mp3"},
-{name:"Song Two",src:"song2.mp3"},
-{name:"Song Three",src:"song3.mp3"}
+{name:"Gorilaz",src:"song1.mp3"},
+{name:"Ecanescence",src:"song2.mp3"},
+{name:"Miku",src:"song3.mp3"}
 ];
 
 let currentTrackIndex=0;
@@ -424,7 +424,7 @@ i think this was summer 2008
 
 i dont remember why we stopped talking
 
-but i remember the mall smelled like pretzels
+but i remember the mall smelled like pretzels, I got pretzled everytime we went. I spent so much money here. I wish i could get it back. 
 </pre>`;
 
 if(type==="songmemory")
@@ -506,7 +506,7 @@ const ctx = canvas.getContext("2d");
 
 let player = {x:180,y:260,size:18};
 let cars = [];
-let score = 0;
+let score = 3;
 let gameOver = false;
 let secretTriggered = false;
 
@@ -523,12 +523,12 @@ function spawnCar(){
   cars.push({
     x:-60,
     y:Math.floor(Math.random()*5)*50,
-    speed:2 + Math.random()*2
+    speed:.5 + Math.random()*2
   });
 
 }
 
-setInterval(spawnCar,1000);
+setInterval(spawnCar,500);
 
 document.addEventListener("keydown",e=>{
 
