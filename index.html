@@ -1,314 +1,576 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ash_desktop</title>
-  <style>
-    body {
-      margin:0;
-      font-family:"Tahoma",sans-serif;
-      overflow:hidden;
-      background:url('bliss.jpg') no-repeat center center fixed;
-      background-size:cover;
-    }
+<title>ash_desktop</title>
 
-    /* CRT Scanlines */
-    .scanlines {
-      position:fixed;
-      width:100%;
-      height:100%;
-      pointer-events:none;
-      background:repeating-linear-gradient(to bottom,
-        rgba(0,0,0,0.08) 0px,
-        rgba(0,0,0,0.08) 2px,
-        transparent 2px,
-        transparent 4px);
-      z-index:999;
-    }
+<style>
 
-    /* Windows */
-    .window {
-      position:absolute;
-      width:420px;
-      background:#c0c0c0;
-      border:2px solid black;
-      display:none;
-      box-shadow:4px 4px 0 #000;
-    }
-    .titlebar {
-      background:linear-gradient(to right,#000080,#1084d0);
-      color:white;
-      padding:4px;
-      font-size:14px;
-      cursor:move;
-      display:flex;
-      justify-content:space-between;
-    }
-    .content {padding:15px;font-size:14px;}
-    
-    /* Desktop */
-    .desktop {
-      display:flex;
-      flex-direction:column;
-      width:100px;
-      padding:10px;
-      position:absolute;
-      top:10px;
-      left:10px;
-    }
-    .icon {
-      width:80px;
-      text-align:center;
-      color:white;
-      cursor:pointer;
-      margin:15px 0;
-    }
-    .icon img {width:48px; image-rendering: pixelated;}
-    .icon:hover {opacity:0.8;}
+body{
+margin:0;
+font-family:"Tahoma",sans-serif;
+overflow:hidden;
+background:url('bliss.jpg') no-repeat center center fixed;
+background-size:cover;
+}
 
-    /* My Documents files */
-    #docsContent {
-      display:grid;
-      grid-template-columns:repeat(auto-fill,90px);
-      gap:15px;
-    }
-    .file {
-      text-align:center;
-      cursor:pointer;
-      font-size:12px;
-    }
-    .file img {display:block;margin:auto;width:60px; image-rendering:pixelated;}
-    .file:hover {background: rgba(255,255,255,0.2);}
+/* CRT Scanlines */
+.scanlines{
+position:fixed;
+width:100%;
+height:100%;
+pointer-events:none;
+background:repeating-linear-gradient(
+to bottom,
+rgba(0,0,0,0.08) 0px,
+rgba(0,0,0,0.08) 2px,
+transparent 2px,
+transparent 4px
+);
+z-index:999;
+}
 
-    /* Taskbar */
-    .taskbar {
-      position:fixed;
-      bottom:0;
-      width:100%;
-      height:40px;
-      background:#c0c0c0;
-      border-top:2px solid #000;
-      display:flex;
-      align-items:center;
-    }
-    .start {background:#c0c0c0;border:2px solid black;margin:5px;padding:5px 10px;font-weight:bold;cursor:pointer;}
-    .clock {margin-left:auto;margin-right:10px;cursor:pointer;}
+/* Windows */
 
-    /* Secret Page */
-    #secretPage {
-      position:fixed;
-      width:100%;
-      height:100%;
-      background:black;
-      color:#0f0;
-      display:none;
-      justify-content:center;
-      align-items:center;
-      font-family:'Courier New',monospace;
-      text-align:center;
-      z-index:20000;
-      flex-direction:column;
-    }
-    #secretPage input {
-      margin-top:20px;
-      background:black;
-      color:#0f0;
-      border:1px solid #0f0;
-      padding:5px;
-    }
+.window{
+position:absolute;
+width:420px;
+background:#c0c0c0;
+border:2px solid black;
+display:none;
+box-shadow:4px 4px 0 #000;
+}
 
-    /* Glitchy mini windows */
-    .glitchWindow {
-      background:#111;
-      color:#0f0;
-      border:2px solid #0f0;
-      font-family:"Courier New",monospace;
-      text-align:center;
-    }
-  </style>
+.titlebar{
+background:linear-gradient(to right,#000080,#1084d0);
+color:white;
+padding:4px;
+font-size:14px;
+cursor:move;
+display:flex;
+justify-content:space-between;
+}
+
+.content{
+padding:15px;
+font-size:14px;
+}
+
+/* Desktop */
+
+.desktop{
+display:flex;
+flex-direction:column;
+width:100px;
+padding:10px;
+position:absolute;
+top:10px;
+left:10px;
+}
+
+.icon{
+width:80px;
+text-align:center;
+color:white;
+cursor:pointer;
+margin:15px 0;
+}
+
+.icon img{
+width:48px;
+image-rendering:pixelated;
+}
+
+.icon:hover{
+opacity:0.8;
+}
+
+/* My Documents */
+
+#docsContent{
+display:grid;
+grid-template-columns:repeat(auto-fill,90px);
+gap:15px;
+}
+
+.file{
+text-align:center;
+cursor:pointer;
+font-size:12px;
+}
+
+.file img{
+display:block;
+margin:auto;
+width:60px;
+image-rendering:pixelated;
+}
+
+.file:hover{
+background:rgba(255,255,255,0.2);
+}
+
+/* Taskbar */
+
+.taskbar{
+position:fixed;
+bottom:0;
+width:100%;
+height:40px;
+background:#c0c0c0;
+border-top:2px solid #000;
+display:flex;
+align-items:center;
+}
+
+.start{
+background:#c0c0c0;
+border:2px solid black;
+margin:5px;
+padding:5px 10px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.clock{
+margin-left:auto;
+margin-right:10px;
+cursor:pointer;
+}
+
+/* Secret Page */
+
+#secretPage{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+color:#0f0;
+display:none;
+justify-content:center;
+align-items:center;
+font-family:'Courier New',monospace;
+text-align:center;
+z-index:20000;
+flex-direction:column;
+}
+
+#secretPage input{
+margin-top:20px;
+background:black;
+color:#0f0;
+border:1px solid #0f0;
+padding:5px;
+}
+
+/* Boot */
+
+#bootScreen{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Tahoma;
+font-size:20px;
+z-index:5000;
+}
+
+</style>
 </head>
+
 <body>
 
-<!-- Boot Screen -->
 <div id="bootScreen">
-  <p>Starting Windows 98...</p>
+<p>Starting Windows 98...</p>
 </div>
 
 <!-- Desktop Icons -->
+
 <div class="desktop">
-  <div class="icon" id="iconMyComputer" onclick="openWindow('popup')">
-    <img src="computer.png"><div>My Computer</div>
-  </div>
-  <div class="icon" onclick="openWindow('docsWindow')">
-    <img src="folder.png"><div>My Documents</div>
-  </div>
-  <div class="icon" id="iconMusic" onclick="openWindow('musicWindow')">
-    <img src="music.png"><div>Music Player</div>
-  </div>
+
+<div class="icon" onclick="openWindow('popup')">
+<img src="computer.png">
+<div>My Computer</div>
 </div>
 
-<!-- Windows -->
+<div class="icon" onclick="openWindow('docsWindow')">
+<img src="folder.png">
+<div>My Documents</div>
+</div>
+
+<div class="icon" onclick="openWindow('musicWindow')">
+<img src="music.png">
+<div>Music Player</div>
+</div>
+
+<div class="icon" onclick="openWindow('crossyWindow')">
+<img src="game.png">
+<div>Frogger.exe</div>
+</div>
+
+</div>
 
 <!-- System Popup -->
+
 <div class="window" id="popup">
-  <div class="titlebar">System<div><button onclick="closeWindow('popup')">X</button></div></div>
-  <div class="content">
-    <p>Welcome to my digital room.</p>
-    <p>Status: online</p>
-  </div>
+<div class="titlebar">System<div><button onclick="closeWindow('popup')">X</button></div></div>
+<div class="content">
+<p>Welcome to my digital room.</p>
+<p>Status: online</p>
+</div>
 </div>
 
-<!-- My Documents -->
+<!-- Documents -->
+
 <div class="window" id="docsWindow">
-  <div class="titlebar">My Documents<div><button onclick="closeWindow('docsWindow')">X</button></div></div>
-  <div class="content" id="docsContent">
-    <div class="file" onclick="openFile('photo1')"><img src="photo1.jpg"><div>mall_photo.jpg</div></div>
-    <div class="file" onclick="openFile('gif1')"><img src="glitter.gif"><div>cool.gif</div></div>
-    <div class="file" onclick="openFile('note1')"><img src="texticon.png"><div>note.txt</div></div>
-    <div class="file" onclick="openFile('songmemory')"><img src="burnedcd.jpg"><div>burned_cd.png</div></div>
-    <div class="file" onclick="openFile('secretFile')"><img src="unknown.png"><div>do_not_open.jpg</div></div>
-    <div class="file" onclick="openFile('oldChat1')"><img src="chaticon.png"><div>chat1.txt</div></div>
-    <div class="file" onclick="openFile('glitch1')"><img src="glitch.png"><div>glitch.gif</div></div>
-    <div class="file" onclick="changeBackground('bliss2.jpg')"><img src="bliss2_thumb.jpg"><div>bliss2.jpg</div></div>
-  </div>
+<div class="titlebar">My Documents<div><button onclick="closeWindow('docsWindow')">X</button></div></div>
+
+<div class="content" id="docsContent">
+
+<div class="file" onclick="openFile('photo1')">
+<img src="photo1.jpg"><div>mall_photo.jpg</div>
+</div>
+
+<div class="file" onclick="openFile('gif1')">
+<img src="glitter.gif"><div>cool.gif</div>
+</div>
+
+<div class="file" onclick="openFile('note1')">
+<img src="texticon.png"><div>note.txt</div>
+</div>
+
+<div class="file" onclick="openFile('songmemory')">
+<img src="burnedcd.jpg"><div>burned_cd.png</div>
+</div>
+
+<div class="file" onclick="openFile('secretFile')">
+<img src="unknown.png"><div>do_not_open.jpg</div>
+</div>
+
+<div class="file" onclick="openFile('oldChat1')">
+<img src="chaticon.png"><div>chat1.txt</div>
+</div>
+
+<div class="file" onclick="openFile('glitch1')">
+<img src="glitch.png"><div>glitch.gif</div>
+</div>
+
+<div class="file" onclick="changeBackground('bliss2.jpg')">
+<img src="bliss2_thumb.jpg"><div>bliss2.jpg</div>
+</div>
+
+</div>
 </div>
 
 <!-- File Viewer -->
+
 <div class="window" id="fileViewer">
-  <div class="titlebar">Viewer<div><button onclick="closeWindow('fileViewer')">X</button></div></div>
-  <div class="content" id="fileContent"></div>
+<div class="titlebar">Viewer<div><button onclick="closeWindow('fileViewer')">X</button></div></div>
+<div class="content" id="fileContent"></div>
 </div>
 
 <!-- Music Player -->
+
 <div class="window" id="musicWindow">
-  <div class="titlebar">Music Player<div><button onclick="closeWindow('musicWindow')">X</button></div></div>
-  <div class="content" style="display:flex;flex-direction:column;align-items:center;">
-    <p id="currentTrack" style="font-weight:bold;margin-bottom:10px;">Track: None</p>
-    <audio id="audioPlayer" controls style="width:90%;"></audio>
-    <div style="margin-top:10px;">
-      <button onclick="prevTrack()">⏮️</button>
-      <button onclick="playPause()">▶️/⏸️</button>
-      <button onclick="nextTrack()">⏭️</button>
-    </div>
-  </div>
+<div class="titlebar">Music Player<div><button onclick="closeWindow('musicWindow')">X</button></div></div>
+
+<div class="content" style="display:flex;flex-direction:column;align-items:center;">
+<p id="currentTrack"><b>Track: None</b></p>
+<audio id="audioPlayer" controls style="width:90%;"></audio>
+
+<div style="margin-top:10px;">
+<button onclick="prevTrack()">⏮️</button>
+<button onclick="playPause()">▶️/⏸️</button>
+<button onclick="nextTrack()">⏭️</button>
+</div>
+</div>
+</div>
+
+<!-- CROSSY ROAD GAME -->
+
+<div class="window" id="crossyWindow">
+
+<div class="titlebar">
+Frogger.exe
+<div><button onclick="closeWindow('crossyWindow')">X</button></div>
+</div>
+
+<div class="content" style="text-align:center">
+
+<canvas id="gameCanvas" width="380" height="300" style="border:2px solid black"></canvas>
+
+<p style="font-size:12px">
+Use arrow keys to cross the road
+</p>
+
+</div>
+
 </div>
 
 <!-- Secret Page -->
+
 <div id="secretPage">
-  <p id="secretText">You're not supposed to be here yet.</p>
-  <input id="secretInput" type="text" placeholder="Type secret here">
+<p id="secretText">You're not supposed to be here yet.</p>
+<input id="secretInput" type="text" placeholder="Type secret here">
 </div>
 
 <!-- Taskbar -->
+
 <div class="taskbar">
-  <div class="start" onclick="shutdown()">Shut Down</div>
-  <div class="clock" id="clock"></div>
+<div class="start" onclick="shutdown()">Shut Down</div>
+<div class="clock" id="clock"></div>
 </div>
 
 <div class="scanlines"></div>
 
 <script>
-// --- Z-index ---
-let zIndexCounter=1;
 
-// --- Boot ---
+/* Boot */
+
 window.addEventListener('load',()=>{
-  setTimeout(()=>document.getElementById('bootScreen').style.display="none",3000);
+setTimeout(()=>{
+document.getElementById('bootScreen').style.display="none";
+},3000);
 });
 
-// --- Open/Close Windows ---
+/* Windows */
+
+let zIndexCounter=1;
+
 function openWindow(id){
-  const win=document.getElementById(id);
-  win.style.display="block";
-  win.style.zIndex=zIndexCounter++;
+const win=document.getElementById(id);
+win.style.display="block";
+win.style.zIndex=zIndexCounter++;
+win.style.left=(100+Math.random()*300)+"px";
+win.style.top=(60+Math.random()*200)+"px";
 }
-function closeWindow(id){document.getElementById(id).style.display="none";}
 
-// --- Clock ---
+function closeWindow(id){
+document.getElementById(id).style.display="none";
+}
+
+/* Clock */
+
 function updateClock(){
-  const now=new Date();
-  document.getElementById("clock").innerText=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
+const now=new Date();
+document.getElementById("clock").innerText=
+now.getHours()+":"+
+String(now.getMinutes()).padStart(2,'0');
 }
-setInterval(updateClock,1000); updateClock();
 
-// --- Music Player ---
-const playlist=[{name:"Song One",src:"song1.mp3"},{name:"Song Two",src:"song2.mp3"},{name:"Song Three",src:"song3.mp3"}];
+setInterval(updateClock,1000);
+updateClock();
+
+/* MUSIC */
+
+const playlist=[
+{name:"Song One",src:"song1.mp3"},
+{name:"Song Two",src:"song2.mp3"},
+{name:"Song Three",src:"song3.mp3"}
+];
+
 let currentTrackIndex=0;
+
 const audio=document.getElementById("audioPlayer");
 const trackLabel=document.getElementById("currentTrack");
 
 function loadTrack(index){
-  if(index<0)index=playlist.length-1;
-  if(index>=playlist.length)index=0;
-  currentTrackIndex=index;
-  audio.src=playlist[currentTrackIndex].src;
-  trackLabel.innerText="Track: "+playlist[currentTrackIndex].name;
-  audio.play();
+
+if(index<0)index=playlist.length-1;
+if(index>=playlist.length)index=0;
+
+currentTrackIndex=index;
+
+audio.src=playlist[currentTrackIndex].src;
+
+trackLabel.innerText="Track: "+playlist[currentTrackIndex].name;
+
+audio.play();
 }
+
 function nextTrack(){loadTrack(currentTrackIndex+1);}
 function prevTrack(){loadTrack(currentTrackIndex-1);}
-function playPause(){if(audio.paused)audio.play();else audio.pause();}
+
+function playPause(){
+if(audio.paused)audio.play();
+else audio.pause();
+}
+
 audio.addEventListener('ended',nextTrack);
+
 loadTrack(0);
 
-// --- Docs files ---
+/* FILES */
+
 function openFile(type){
-  const viewer=document.getElementById("fileViewer");
-  const content=document.getElementById("fileContent");
-  openWindow("fileViewer");
 
-  if(type==="photo1") content.innerHTML=`<img src="photo1.jpg" style="max-width:100%;"><p style="opacity:0.6;">taken on mom's digital camera</p>`;
-  if(type==="gif1") content.innerHTML=`<img src="glitter.gif"><p>made this on glitter-graphics.com</p>`;
-  if(type==="note1") content.innerHTML=`<pre>i think this was summer 2008\n\ni dont remember why we stopped talking\nbut i remember the mall smelled like pretzels</pre>`;
-  if(type==="songmemory") content.innerHTML=`<img src="burnedcd.jpg" style="max-width:100%;"><p>Track 7 always made me feel weird.</p>`;
-  if(type==="secretFile"){
-    content.innerHTML=`<img src="corrupted.jpg" style="max-width:100%;"><p style="color:red;">file corrupted.</p>`;
-    setTimeout(()=>{
-      openWindow("secretPage");
-      document.getElementById("secretText").innerText="you weren't supposed to open that.";
-    },2000);
-  }
-  if(type==="oldChat1") content.innerHTML=`<pre>[07/14/2009] Ash: hey, remember the mall?\n[07/14/2009] Friend: omg yeah i do...</pre>`;
-  if(type==="glitch1"){
-    content.innerHTML=`<img src="glitch.gif" style="width:100%;"><p>system instability...</p>`;
-    // optional flicker effect
-    let flicker = setInterval(()=>{viewer.style.opacity=Math.random();},100);
-    setTimeout(()=>{clearInterval(flicker); viewer.style.opacity=1;},5000);
-  }
+const viewer=document.getElementById("fileViewer");
+const content=document.getElementById("fileContent");
+
+openWindow("fileViewer");
+
+if(type==="photo1")
+content.innerHTML=`<img src="photo1.jpg" style="max-width:100%;">`;
+
+if(type==="gif1")
+content.innerHTML=`<img src="glitter.gif">`;
+
+if(type==="note1")
+content.innerHTML=`<pre>
+i think this was summer 2008
+
+i dont remember why we stopped talking
+
+but i remember the mall smelled like pretzels
+</pre>`;
+
+if(type==="songmemory")
+content.innerHTML=`<img src="burnedcd.jpg" style="max-width:100%;">`;
+
+if(type==="secretFile"){
+content.innerHTML=`<p style="color:red;">file corrupted</p>`;
+
+setTimeout(()=>{
+document.getElementById("secretPage").style.display="flex";
+},2000);
 }
 
-// --- Secret input ---
+}
+
+/* SECRET */
+
 document.getElementById("secretInput").addEventListener("keydown",function(e){
-  if(e.key==="Enter"){
-    if(this.value.toLowerCase()==="wake_up") window.location.href="void.html";
-    else {this.value="";this.placeholder="incorrect.";}
-  }
+
+if(e.key==="Enter"){
+
+if(this.value.toLowerCase()==="wake_up"){
+window.location.href="void.html";
+}
+
+else{
+this.value="";
+this.placeholder="incorrect.";
+}
+
+}
+
 });
 
-// --- Background change ---
+/* BACKGROUND */
+
 function changeBackground(img){
-  document.body.style.background = `url('${img}') no-repeat center center fixed`;
-  document.body.style.backgroundSize = 'cover';
+document.body.style.background=`url('${img}') no-repeat center center fixed`;
+document.body.style.backgroundSize='cover';
 }
 
-// --- Shutdown ---
+/* SHUTDOWN */
+
 function shutdown(){
-  document.body.innerHTML="<div style='background:black;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Tahoma;'>It is now safe to turn off your computer.</div>";
+document.body.innerHTML=
+"<div style='background:black;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Tahoma;'>It is now safe to turn off your computer.</div>";
 }
 
-// --- Draggable windows ---
+/* DRAG WINDOWS */
+
 let dragTarget=null,offsetX=0,offsetY=0;
+
 document.addEventListener('mousedown',e=>{
-  if(e.target.closest('.titlebar')){
-    dragTarget=e.target.closest('.window');
-    offsetX=e.clientX-dragTarget.offsetLeft;
-    offsetY=e.clientY-dragTarget.offsetTop;
-    dragTarget.style.zIndex=zIndexCounter++;
-  }
+
+if(e.target.closest('.titlebar')){
+dragTarget=e.target.closest('.window');
+
+offsetX=e.clientX-dragTarget.offsetLeft;
+offsetY=e.clientY-dragTarget.offsetTop;
+
+dragTarget.style.zIndex=zIndexCounter++;
+}
+
 });
+
 document.addEventListener('mousemove',e=>{
-  if(dragTarget){dragTarget.style.left=(e.clientX-offsetX)+'px';dragTarget.style.top=(e.clientY-offsetY)+'px';}
+if(dragTarget){
+dragTarget.style.left=(e.clientX-offsetX)+'px';
+dragTarget.style.top=(e.clientY-offsetY)+'px';
+}
 });
+
 document.addEventListener('mouseup',()=>{dragTarget=null;});
+
+/* GAME */
+
+const canvas=document.getElementById("gameCanvas");
+const ctx=canvas.getContext("2d");
+
+let player={x:180,y:260,size:15};
+let cars=[];
+
+function spawnCar(){
+
+cars.push({
+x:-40,
+y:Math.floor(Math.random()*5)*50,
+speed:2+Math.random()*2
+});
+
+}
+
+setInterval(spawnCar,1200);
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="ArrowUp")player.y-=20;
+if(e.key==="ArrowDown")player.y+=20;
+if(e.key==="ArrowLeft")player.x-=20;
+if(e.key==="ArrowRight")player.x+=20;
+
+});
+
+function gameLoop(){
+
+ctx.fillStyle="#5c94fc";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#444";
+
+for(let i=0;i<5;i++){
+ctx.fillRect(0,i*50,380,40);
+}
+
+ctx.fillStyle="lime";
+ctx.fillRect(player.x,player.y,player.size,player.size);
+
+ctx.fillStyle="red";
+
+cars.forEach(car=>{
+
+car.x+=car.speed;
+
+ctx.fillRect(car.x,car.y,40,20);
+
+if(
+player.x<car.x+40 &&
+player.x+player.size>car.x &&
+player.y<car.y+20 &&
+player.y+player.size>car.y
+){
+alert("You got hit!");
+player.x=180;
+player.y=260;
+}
+
+if(car.x>400)car.x=-40;
+
+});
+
+requestAnimationFrame(gameLoop);
+
+}
+
+gameLoop();
+
 </script>
 
 </body>
