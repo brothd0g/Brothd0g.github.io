@@ -310,6 +310,31 @@ Use arrow keys to cross the road
 
 </div>
 
+  <div id="mini-browser" style="width: 400px; height: 500px; border: 2px solid #333; border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; font-family: sans-serif;">
+  <!-- Address bar -->
+  <div style="display: flex; padding: 5px; background: #222; color: #fff;">
+    <input id="url-input" type="text" placeholder="Enter URL..." style="flex: 1; padding: 5px; border-radius: 5px; border: none;" />
+    <button onclick="loadURL()" style="margin-left: 5px; padding: 5px 10px; border-radius: 5px; border: none; background: #555; color: white;">Go</button>
+  </div>
+  
+  <!-- Browser view -->
+  <iframe id="browser-frame" src="https://example.com" style="flex: 1; border: none;"></iframe>
+</div>
+
+<script>
+function loadURL() {
+  const url = document.getElementById('url-input').value;
+  let formattedURL = url;
+  
+  // Make sure it has http/https
+  if (!/^https?:\/\//i.test(url)) {
+    formattedURL = 'https://' + url;
+  }
+  
+  document.getElementById('browser-frame').src = formattedURL;
+}
+</script>
+  
 <!-- Secret Page -->
 
 <div id="secretPage">
